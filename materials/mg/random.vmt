@@ -1,0 +1,8 @@
+"UnlitGeneric"
+{
+	"$basetexture" "mg/random"
+	"$nolod" 1
+	"$vertexalpha" 1
+	"$vertexcolor" 1
+	"$translucent" "1"
+}

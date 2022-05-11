@@ -1,0 +1,13 @@
+"Refract"
+{
+ 	"$normalmap" "mg/blurn"
+	"$bluramount" "1"
+	"$nofog" "1"
+	"$ignorez" "1"
+	"$nocull" "1"
+
+	"Refract_DX60"
+	{
+		"$fallbackmaterial" "null"
+	}
+}
