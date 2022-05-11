@@ -1,0 +1,1 @@
+ENT.Base = "mg_bullet"
