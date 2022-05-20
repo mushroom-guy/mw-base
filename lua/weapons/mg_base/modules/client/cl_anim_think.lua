@@ -284,90 +284,46 @@ function SWEP:DoSpatialSound(soundName, position)
     sound.Play(soundName, self:GetOwner():EyePos() + ang:Forward() * position.y + ang:Right() * position.x + ang:Up() * position.z)
 end
 
-function SWEP:DoEjection(attName)
-    --[[local attId = self.m_ViewModel:LookupAttachment(attName)
-    local att = self.m_ViewModel:GetAttachment(attId)
+local function makeShellForEntity(self, ent, attName)
+    local attId = ent:LookupAttachment(attName)
+    local att = ent:GetAttachment(attId)
     local shell = ClientsideModel(self.Shell.Model, self.RenderGroup)
+    shell:SetRenderMode(self.RenderMode)
     shell:SetMoveType(MOVETYPE_NONE)
-    shell:SetParent(self.m_ViewModel)
+    shell:SetParent(ent)
     shell:SetModelScale(self.Shell.Scale)
-    shell:SetPos(att.Pos)
-    shell:SetAngles(att.Ang + AngleRand() * 100)
-    shell:SetNoDraw(true)
-    
-    local ind = #self.Shells + 1
-    
-    self.Shells[ind] = {
-        Shell = shell,
-        AttId = attId
-    }
+    local offset = Vector()
 
-    timer.Simple(0.1, function()
-        if (shell != NULL) then
+    if (self.Shell.Offset != nil) then
+        offset = offset + (att.Ang:Forward() * self.Shell.Offset.y)
+        offset = offset + (att.Ang:Right() * self.Shell.Offset.x)
+        offset = offset + (att.Ang:Up() * self.Shell.Offset.z)
+    end
+
+    shell:SetPos(att.Pos + offset)
+    shell:SetAngles(att.Ang)
+    shell.attId = attId
+
+    timer.Simple(0.4, function()
+        if (IsValid(shell)) then
             shell:Remove()
-            self.Shells[ind] = nil
         end
     end)
 
-    self:DoEjectionWorld(attName)]]
+    ent.shell = shell
+end
 
-    if (IsValid(self.ShellModel.Shell)) then
-        self.ShellModel.Shell:Remove()
+function SWEP:DoEjection(attName)
+    if (IsValid(self.m_ViewModel.shell)) then
+        self.m_ViewModel.shell:Remove()
     end
 
-    if (IsValid(self.TpShellModel.Shell)) then
-        self.TpShellModel.Shell:Remove()
+    if (IsValid(self.m_WorldModel.shell)) then
+        self.m_WorldModel.shell:Remove()
     end
 
-    if (self:IsCarriedByLocalPlayer()) then
-        local attId = self.m_ViewModel:LookupAttachment(attName)
-        local att = self.m_ViewModel:GetAttachment(attId)
-        local shell = ClientsideModel(self.Shell.Model, self.RenderGroup)
-        shell:SetMoveType(MOVETYPE_NONE)
-        shell:SetParent(self.m_ViewModel)
-        shell:SetModelScale(self.Shell.Scale)
-        local offset = Vector()
-
-        if (self.Shell.Offset != nil) then
-            offset = offset + (att.Ang:Forward() * self.Shell.Offset.y)
-            offset = offset + (att.Ang:Right() * self.Shell.Offset.x)
-            offset = offset + (att.Ang:Up() * self.Shell.Offset.z)
-        end
-
-        shell:SetPos(att.Pos + offset)
-        shell:SetAngles(att.Ang)
-        shell:SetNoDraw(true)
-
-        self.ShellModel.Shell = shell
-        self.ShellModel.AttId = attId
-
-        timer.Simple(0.4, function()
-            if (IsValid(shell)) then
-                shell:Remove()
-            end
-        end)
-    end
-
-    if (self:GetOwner():ShouldDrawLocalPlayer() || !self:IsCarriedByLocalPlayer()) then
-        local attId = self.m_WorldModel:LookupAttachment(attName)
-        local att = self.m_WorldModel:GetAttachment(attId)
-        local shell = ClientsideModel(self.Shell.Model, self.RenderGroup)
-        shell:SetMoveType(MOVETYPE_NONE)
-        shell:SetParent(self.m_WorldModel)
-        shell:SetModelScale(self.Shell.Scale)
-        shell:SetPos(att.Pos)
-        shell:SetAngles(att.Ang + AngleRand() * 100)
-        shell:SetNoDraw(true)
-
-        self.TpShellModel.Shell = shell
-        self.TpShellModel.AttId = attId
-
-        timer.Simple(0.4, function()
-            if (IsValid(shell)) then
-                shell:Remove()
-            end
-        end)
-    end
+    makeShellForEntity(self, self.m_ViewModel, attName)
+    makeShellForEntity(self, self.m_WorldModel, attName)
 
     timer.Simple(0.6, function()
         if (IsValid(self) && IsValid(self:GetOwner())) then
@@ -375,32 +331,6 @@ function SWEP:DoEjection(attName)
         end
     end)
 end
-
---[[function SWEP:DoEjectionWorld(attName)
-    local attId = self:LookupAttachment(attName)
-    local att = self:GetAttachment(attId)
-    local shell = ClientsideModel(self.Shell.Model, self.RenderGroup)
-    shell:SetMoveType(MOVETYPE_NONE)
-    shell:SetParent(self)
-    shell:SetModelScale(self.Shell.Scale)
-    shell:SetPos(att.Pos)
-    shell:SetAngles(att.Ang + AngleRand() * 100)
-    shell:SetNoDraw(true)
-
-    local ind = #self.TpShells + 1
-    
-    self.TpShells[ind] = {
-        Shell = shell,
-        AttId = attId
-    }
-
-    timer.Simple(0.4, function()
-        if (shell != NULL) then
-            shell:Remove()
-            self.TpShells[ind] = nil
-        end
-    end)
-end]]
 
 function SWEP:AnimationEvents()
     if (self:GetOwner() == NULL) then
@@ -464,43 +394,14 @@ function SWEP:RenderParticles(particles)
     end
 end
 
-function SWEP:RenderShells(shells, ent)
-    if (IsValid(shells.Shell)) then
-        local data = ent:GetAttachment(shells.AttId)
-
-        if (shells.Shell.spin == nil) then
-            shells.Shell.spin = 0
-        end
-
-        if (shells.Shell.speed == nil) then
-            shells.Shell.speed = 0
-        end
-
-        if (shells.Shell:GetRenderOrigin() == nil) then
-            shells.Shell:SetRenderOrigin(data.Pos)
-        end
-
+function SWEP:RenderShells(ent)
+    if (IsValid(ent.shell)) then
+        local data = ent:GetAttachment(ent.shell.attId)
         local rate = 1000
 
-        if (self.Shell.SpinForce != nil) then
-            rate = self.Shell.SpinForce
-        end
-
-        shells.Shell.spin = shells.Shell.spin + rate
-        shells.Shell.speed = shells.Shell.speed + (self.Shell.Force * FrameTime())
-
-        shells.Shell:SetRenderAngles(data.Ang * (shells.Shell.spin * FrameTime()))
-        shells.Shell:SetRenderOrigin(data.Pos + data.Ang:Forward() * shells.Shell.speed)
+        ent.shell:SetAngles(ent.shell:GetAngles() * (self.Shell.SpinForce || 10) * 100 * FrameTime())
+        ent.shell:SetPos(ent.shell:GetPos() + (data.Ang:Forward() * self.Shell.Force) * FrameTime())
     end
-    --[[for i, shell in pairs(shells) do
-        if (shell != NULL) then
-            shell.Shell:DrawModel()
-            shell.Shell:SetAngles(shell.Shell:GetAngles() * (1000 * FrameTime()))
-
-            local data = ent:GetAttachment(shell.AttId)
-            shell.Shell:SetPos(shell.Shell:GetPos() + data.Ang:Forward() * (self.Shell.Force * FrameTime()))
-        end
-    end]]
 end
 
 function SWEP:FindAttachmentInChildren(ent, att)

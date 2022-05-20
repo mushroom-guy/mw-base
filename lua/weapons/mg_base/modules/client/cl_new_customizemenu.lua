@@ -44,6 +44,19 @@ hook.Add("OnContextMenuOpen", "MW_ContextMenu", function()
         RunConsoleCommand("mgbase_customize")
     end
 end)
+
+local function closeCustomizationMenu()
+    gui.EnableScreenClicker(false)
+    surface.PlaySound(closeSound)
+
+    if (IsValid(MW_CUSTOMIZEMENU)) then
+        MW_CUSTOMIZEMENU:Remove()
+    end
+end
+
+local function validWeapon(weapon)
+    return IsValid(weapon) && weapon:GetOwner() == GetViewEntity() && weapon:IsCustomizing()
+end
  
 --removing panel if already there (reload code)
 if (IsValid(MW_CUSTOMIZEMENU)) then
@@ -280,6 +293,7 @@ end
 
 local function openCustomizationMenu(weapon)
     surface.PlaySound(openSound)
+    gui.EnableScreenClicker(true)
 
     MW_CUSTOMIZEMENU = vgui.Create("DFrame") 
     MW_CUSTOMIZEMENU:SetPos(0, 0)
@@ -289,6 +303,10 @@ local function openCustomizationMenu(weapon)
     MW_CUSTOMIZEMENU:Center()
     MW_CUSTOMIZEMENU.AlphaDelta = 0
     function MW_CUSTOMIZEMENU:Paint(width, height)
+        if (!validWeapon(weapon)) then
+            return
+        end
+
         self.AlphaDelta = Lerp(math.min(10 * FrameTime(), 1), self.AlphaDelta, 1)
 
         --open blur thing
@@ -310,6 +328,12 @@ local function openCustomizationMenu(weapon)
     
         --stats
         weapon:DrawProsAndCons()
+    end
+
+    function MW_CUSTOMIZEMENU:Think()
+        if (!validWeapon(weapon)) then
+            closeCustomizationMenu()
+        end
     end
 
     local categories = {}
@@ -395,6 +419,10 @@ local function openCustomizationMenu(weapon)
         but.AvailableAttachments = count
 
         function but:Think()
+            if (!validWeapon(weapon)) then
+                return
+            end
+
             self.AvailableAttachments = 0
 
             for slot, atts in pairs(weapon.Customization) do
@@ -483,6 +511,10 @@ local function openCustomizationMenu(weapon)
         but.inUsePanel = removeAttachmentButton
 
         function removeAttachmentButton:Think()
+            if (!validWeapon(weapon)) then
+                return
+            end
+
             self:SetEnabled(false)
             self:SetCursor("none")
 
@@ -496,6 +528,10 @@ local function openCustomizationMenu(weapon)
         end
 
         function removeAttachmentButton:Paint(width, height)
+            if (!validWeapon(weapon)) then
+                return
+            end
+
             --attachment in use next to button
             local attachmentInUse = nil
 
@@ -615,21 +651,9 @@ local function openCustomizationMenu(weapon)
     end
 end
 
-local function closeCustomizationMenu()
-    surface.PlaySound(closeSound)
-
-    if (IsValid(MW_CUSTOMIZEMENU)) then
-        MW_CUSTOMIZEMENU:Remove()
-    end
-end
-
 function SWEP:CustomizationMenu()
     if (self:IsCustomizing()) then
-        gui.EnableScreenClicker(true)
         openCustomizationMenu(self)
-    else
-        gui.EnableScreenClicker(false)
-        closeCustomizationMenu()
     end
 end
 

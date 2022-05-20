@@ -928,6 +928,13 @@ sound.Add({
     sound = {"viper/weapons/deagle/weap_decho_fire_plr_01.ogg"}              
 })
 sound.Add({
+    name =           "MW19_DEAGLE.Fire.First",
+    channel =        CHAN_TRIGGER,
+    level = 140,
+    volume =      1,
+    sound = {"viper/weapons/deagle/weap_decho_fire_first_plr_01.ogg"}              
+})
+sound.Add({
     name =           "MW19_DEAGLE.Fire_S",
     channel =        CHAN_WEAPON,
     level = 140,
@@ -1498,6 +1505,22 @@ sound.Add({
     sound = {"viper/weapons/m9/weap_mike9a3_fire_plr_01.ogg"}              
 })
 sound.Add({
+    name =           "MW19_M9.Fire.First",
+    channel =        CHAN_TRIGGER,
+    level = 140,
+    pitch = {90, 110},
+    volume =      1,
+    sound = {"viper/weapons/m9/weap_mike9a3_hammer_plr_01.ogg"}              
+})
+sound.Add({
+    name =           "MW19_M9.Fire.Disconnector",
+    channel =        CHAN_TRIGGER +1,
+    level = 140,
+    pitch = {90, 110},
+    volume =      1,
+    sound = {"viper/weapons/m9/weap_mike9a3_disconnector_plr_01.ogg"}              
+})
+sound.Add({
     name =           "MW19_M9.Fire_S",
     channel =        CHAN_WEAPON,
     level = 140,
@@ -1959,7 +1982,7 @@ sound.Add({
     level = 140,
     volume =      1,
     pitch = { 90, 110 },
-    sound = {"viper/weapons/p320/weap_papa320_fire_first_plr_01.ogg"}              
+    sound = {"viper/weapons/p320/weap_papa320_fire_plr_01.ogg"}              
 })
 sound.Add({
     name =           "MW19_P320.Fire_S",
@@ -2315,6 +2338,18 @@ sound.Add({
     channel =        CHAN_AUTO,
     volume =      1,
     sound = {"viper/weapons/P320/wfoly_ar_mcharlie_inspect_05.ogg"}              
+})
+sound.Add({
+    name =           "MW19_P320.Fire.First",
+    channel =        CHAN_TRIGGER,
+    volume =      1,
+    sound = {"viper/weapons/P320/weap_papa320_fire_first_plr_01.ogg"}              
+})
+sound.Add({
+    name =           "MW19_P320.Fire.Disconnector",
+    channel =        CHAN_TRIGGER,
+    volume =      1,
+    sound = {"viper/weapons/P320/weap_papa320_disconnector_plr_01.ogg"}              
 })
 sound.Add({
     name =           "MW19_P320.LastShot",
@@ -2944,6 +2979,22 @@ sound.Add({
     sound = {"viper/weapons/glock/weap_golf21_fire_plr_01.ogg"}              
 })
 sound.Add({
+    name =           "MW19_GLOCK.Fire.First",
+    channel =        CHAN_TRIGGER,
+    level = 140,
+    volume =      1,
+    pitch  = {90, 110},
+    sound = {"viper/weapons/glock/weap_golf21_fire_first_plr_01.ogg"}              
+})
+sound.Add({
+    name =           "MW19_GLOCK.Fire.Disconnector",
+    channel =        CHAN_TRIGGER,
+    level = 140,
+    volume =      1,
+    pitch  = {90, 110},
+    sound = {"viper/weapons/glock/weap_golf21_disconnector_plr_01.ogg"}              
+})
+sound.Add({
     name =           "MW19_GLOCK.Fire_S",
     channel =        CHAN_WEAPON,
     level = 140,
@@ -3188,6 +3239,22 @@ sound.Add({
     pitch  = {90, 110},
     volume =      1,
     sound = {"viper/weapons/m1911/weap_mike1911_fire_plr_01.ogg"}              
+})
+sound.Add({
+    name =           "MW19_M1911.Fire.First",
+    channel =        CHAN_TRIGGER,
+    level = 140,
+    pitch  = {90, 110},
+    volume =      1,
+    sound = {"viper/weapons/m1911/weap_mike1911_fire_first_plr_01.ogg"}              
+})
+sound.Add({
+    name =           "MW19_M1911.Fire.Disconnector",
+    channel =        CHAN_TRIGGER +1,
+    level = 140,
+    pitch  = {90, 110},
+    volume =      1,
+    sound = {"viper/weapons/m1911/weap_mike1911_disconnector_plr_01.ogg"}              
 })
 
 sound.Add({

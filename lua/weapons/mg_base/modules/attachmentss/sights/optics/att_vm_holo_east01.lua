@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_optic"
 ATTACHMENT.Name = "APX5 Holographic Sight"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_holo_east.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_holo_east.vmt")
@@ -13,8 +13,8 @@ ATTACHMENT.AttachmentBodygroups ={
 }
 ATTACHMENT.Optic = {
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_holo_east_lens.vmt"),
-    LensBodygroup = "lens",
-    FOV = 6, 
+    HideModel = Model("models/viper/mw/attachments/attachment_vm_holo_east_hide.mdl"),
+    LensBodygroup = "lens", 
     ParallaxSize = 450, --a value of zero means 1:1 size with the end of the optic
     Thermal = false
 }

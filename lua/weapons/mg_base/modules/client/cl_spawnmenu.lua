@@ -362,7 +362,7 @@ hook.Add("PopulateWeapons", "AddWeaponContentMW19", function(pnlContent, tree, n
 	
 	--look into every weapon and see if they're from mgbase
 	for _, weapon in pairs(weaponsList) do
-		if (weapons.IsBasedOn(weapon.ClassName, "mg_base")) then
+		if (weapons.IsBasedOn(weapon.ClassName, "mg_base") || weapon.ClassName == "mw_infil_flare") then
 			if (mgbaseWeapons[weapon.Category] == nil) then
 				mgbaseWeapons[weapon.Category] = {}
 			end

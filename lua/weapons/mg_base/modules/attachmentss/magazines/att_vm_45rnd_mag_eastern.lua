@@ -1,6 +1,6 @@
 ATTACHMENT.Base = "att_magazine"
 ATTACHMENT.Name = "45 Round Mags"
-ATTACHMENT.Model = Model("viper/mw/attachments/attachment_vm_ar_anov94_xmags.mdl")
+ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_ar_anov94_xmags.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/icon_attachment_ar_anov94_xmags.vmt")
 
 

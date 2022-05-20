@@ -157,6 +157,7 @@ function SWEP:RecreateClientsideModels(bAtts)
     if (bAtts) then
         --create models:
         for slot, attachment in pairs(self:GetAllAttachmentsInUse()) do
+            attachment:Init(self)
             self:CreateAttachmentModel(attachment)
         end
 
@@ -219,6 +220,7 @@ function SWEP:CreateAttachmentForUse(attachmentClass)
 
     if (CLIENT) then
         if (oldAtt != nil) then --it could be nil if we are customizing for the first time (just spawned)
+            oldAtt:OnRemove(self)
             if (IsValid(oldAtt.m_Model)) then
                 if (oldAtt.m_Model.mw_flashlightProjTexture != nil) then
                     oldAtt.m_Model.mw_flashlightProjTexture:Remove()
@@ -256,6 +258,9 @@ function SWEP:CreateAttachmentForUse(attachmentClass)
     end
 
     self.m_CustomizationInUse[slot] = att
+
+    att:Init(self)
+
     return att
 end
 
@@ -523,7 +528,7 @@ function SWEP:OnRestore()
     self:SetIsAiming(false)
     self:SetIsSprinting(false)
     self:SetIsTrigger(false)
-    self:SetHasShotAfterTrigger(false)
+    self:SetHasShotAfterTrigger(false) 
     self:SetIsCustomizing(false)
     self:SetToggleAim(false)
     self:SetSafety(false)

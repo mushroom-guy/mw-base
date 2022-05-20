@@ -174,6 +174,7 @@ function SWEP:Think()
 
     if (self:GetOwner():KeyDown(IN_USE) && self:GetOwner():KeyPressed(IN_ATTACK2)) then
         self:SetSafety(!self:GetSafety())
+        self.m_bSafety = self:GetSafety()
     end
 end
 

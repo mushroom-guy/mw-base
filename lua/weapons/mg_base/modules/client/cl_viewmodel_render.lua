@@ -43,14 +43,13 @@ function SWEP:PostDrawViewModel(vm, weapon, ply)
     self:RenderModels(self.m_ViewModel)
 
     --shells
-    self:RenderShells(self.ShellModel, self.m_ViewModel)
+    self:RenderShells(self.m_ViewModel)
 
     --weapon sounds
     self:AnimationEvents()
     
     --reticles
-    self:RenderReticles()
-    self:RenderScreens()
+    self:RenderSight()
 
     --inspection
     self:RenderInspection()
@@ -154,7 +153,9 @@ end
 
 function SWEP:RenderModels(ent) 
     if (ent == self.m_ViewModel || ent == self.m_WorldModel || #ent:GetChildren() <= 0) then
-        ent:DrawModel((ent == self.m_ViewModel || ent == self.m_WorldModel) && STUDIO_RENDER || 0) --0 is meant to be only setupbones in engine, but for some reason parents are drawn anyways
+        if (self:GetSight() == nil || ent != self:GetSight().m_Model) then
+            ent:DrawModel()
+        end
     end
 
     for i, child in pairs(ent:GetChildren()) do
@@ -170,16 +171,8 @@ function SWEP:RefreshCandidates(ent)
     end
 end
 
-function SWEP:RenderReticles()
-    if (self:GetAimDelta() <= 0 && GetConVar("mgbase_fx_cheap_reticles"):GetBool()) then
-        return
-    end
-
+function SWEP:RenderSight()
     if (self:GetSight() == nil) then
-        return
-    end
-
-    if (self:GetSight().Optic != nil && self:GetSight().ReticleHybrid == nil) then
         return
     end
 
@@ -193,46 +186,13 @@ function SWEP:RenderReticles()
         ret = self:GetSight().ReticleHybrid
     end
 
-    render.SetStencilWriteMask(0xFF)
-    render.SetStencilTestMask(0xFF)
-    render.SetStencilReferenceValue(0)
-    render.SetStencilCompareFunction(STENCIL_ALWAYS)
-    render.SetStencilPassOperation(STENCIL_REPLACE)
-    render.SetStencilFailOperation(STENCIL_KEEP)
-    render.SetStencilZFailOperation(STENCIL_KEEP)
-    render.SetStencilEnable(true)
-    render.SetStencilReferenceValue(MWBASE_STENCIL_REFVALUE + 1)
+    local bRenderSightReticle = !GetConVar("mgbase_fx_cheap_reticles"):GetBool()
 
-    render.SetBlend(0)
-    self:GetSight().m_Model:DrawModel()
-    render.SetBlend(1)
-
-    render.SetStencilCompareFunction(STENCIL_EQUAL)
-
-    local att = self:GetSight().m_Model:GetAttachment(self:GetSight().m_Model:LookupAttachment(ret.Attachment))
-    local pos, ang = att.Pos, att.Ang
-    ang:RotateAroundAxis(ang:Up(), 270)
-    ang:RotateAroundAxis(ang:Right(), 0)
-    ang:RotateAroundAxis(ang:Forward(), 90)
-    
-    --what the fuck they dont need offsets anymore?!?
-    cam.Start3D2D(pos + ang:Up() * -100 --[[+ ang:Right() * -6.4 + ang:Forward() * -1.31]], ang, 0.01) --wtf happened here? it didnt need the offsets before...
-        surface.SetMaterial(ret.Material)
-
-        local size = ret.Size 
-        local color = ret.Color
-
-        --surface.SetDrawColor(0, 0, 0, 255)
-        --surface.DrawRect(size * -0.5, size * -0.5, size, size)
-
-        surface.SetDrawColor(color.r, color.g, color.b, color.a)
-        for i = 1, GetConVar("mgbase_fx_reticle_brightness"):GetInt(), 1 do
-            surface.DrawTexturedRect(size * -0.5, size * -0.5, size, size)
-        end
-    cam.End3D2D()
-
-    render.SetStencilEnable(false)
-    render.ClearStencil()
+    if (self:GetAimDelta() <= 0.9) then
+        self:GetSight().m_Model:DrawModel()
+    else
+        self:GetSight():RenderReticle(self)
+    end
 end
 
 local small = Vector(0, 0, 0)

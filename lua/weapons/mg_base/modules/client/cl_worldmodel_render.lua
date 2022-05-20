@@ -14,6 +14,8 @@ function SWEP:DrawWorldModelTranslucent(flags)
     render.SetBlend(1)
 
     local pos, ang = self:GetBonePosition(0)
+    debugoverlay.Axis(pos, ang, 5, 0, true)
+    
     local wPos = self:GetPos()
     self.m_WorldModel:SetPos(wPos + (pos - wPos))
 
@@ -36,7 +38,7 @@ function SWEP:DrawWorldModelTranslucent(flags)
     self:RenderParticles(self.TpParticles)
 
     --shells
-    self:RenderShells(self.TpShellModel, self.m_WorldModel)
+    self:RenderShells(self.m_WorldModel)
 
     self:SetupBones()
     self.m_WorldModel:SetupBones()

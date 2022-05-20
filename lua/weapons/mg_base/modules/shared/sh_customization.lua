@@ -239,7 +239,8 @@ function SWEP:BuildCustomizedGun()
     clearBaseClass(self.Animations)
 
     if (CLIENT) then
-        self.m_ViewModel:SetModel(self.VModel)
+        self:SetViewModel(self.VModel)
+        self:SetWorldModel(self.WorldModel)
 
         self.GripPoseParameter.PoseParameter = nil
         self.GripPoseParameter2.PoseParameter = nil
@@ -259,6 +260,15 @@ function SWEP:BuildCustomizedGun()
 
     self.ValuesToRemove = {}
 
+    bDoingStats = true
+
+    --making sure people dont access them while doing stats
+    local vmodel = self.m_ViewModel
+    local wmodel = self.m_WorldModel
+
+    self.m_ViewModel = nil
+    self.m_WorldModel = nil
+    
     local stats = {}
     self:DeepObjectCopy(self:GetTable(), stats)
 
@@ -284,6 +294,11 @@ function SWEP:BuildCustomizedGun()
     
     clearBaseClass(stats)
     self:DeepObjectCopy(stats, self)
+
+    bDoingStats = false
+
+    self.m_ViewModel = vmodel
+    self.m_WorldModel = wmodel
 
     for slot, att in pairs(self:GetAllAttachmentsInUse()) do
         att:PostProcess(self)
@@ -363,20 +378,18 @@ function SWEP:BuildCustomizedGun()
         end
     end
 
-    for slot, att in pairs(self:GetAllAttachmentsInUse()) do
-        att:Appearance(self.m_ViewModel, "Weapon")
-        att:Appearance(self.m_WorldModel, "Weapon")
+    if (CLIENT) then
+        for slot, att in pairs(self:GetAllAttachmentsInUse()) do
+            att:Appearance(self.m_ViewModel, "Weapon")
+            att:Appearance(self.m_WorldModel, "Weapon")
 
-        for _, att2 in pairs(self:GetAllAttachmentsInUse()) do
-            if (att.Model != nil) then
-                att:Appearance(att2.m_Model, att2.Category)
-                att:Appearance(att2.m_TpModel, att2.Category)
+            for _, att2 in pairs(self:GetAllAttachmentsInUse()) do
+                if (att2.Model != nil) then
+                    att:Appearance(att2.m_Model, att2.Category)
+                    att:Appearance(att2.m_TpModel, att2.Category)
+                end
             end
         end
-    end
-
-    if (CLIENT) then
-        recreateRenderTarget(self)
     end
 
     --meme marine
@@ -456,7 +469,7 @@ function SWEP:RenderCustomization(model)
     if (optic != nil) then
         self:GetSight().m_Model:SetBodygroup(
             self:GetSight().m_Model:FindBodygroupByName(optic.LensBodygroup), 
-            self:GetAimModeDelta() <= self.m_hybridSwitchThreshold && self:GetAimDelta() > 0 && 0 || 1
+            self:GetAimModeDelta() <= self.m_hybridSwitchThreshold && self:GetAimDelta() > 0.9 && 0 || 1
         )
     end
 
@@ -675,13 +688,32 @@ function SWEP:EnableGrip2(instant)
     self.GripPoseParameter2.Target = 1
 end
 
+local bDoingStats = false
+
 function SWEP:SetViewModel(path)
+    if (bDoingStats) then
+        error("Do not use this while building stats!")
+    end
+
     if (SERVER) then
         return
     end
 
     self.m_ViewModel:SetModel(path)
     self.m_ViewModel.cachedBones = nil
+end
+
+function SWEP:SetWorldModel(path)
+    if (bDoingStats) then
+        error("Do not use this while building stats!")
+    end
+
+    if (SERVER) then
+        return
+    end
+
+    self.m_WorldModel:SetModel(path)
+    self.m_WorldModel.cachedBones = nil
 end
 
 if (SERVER) then
@@ -711,148 +743,6 @@ local thermalCC = {
 	[ "$pp_colour_mulb" ] = 0
 }
 local ThermalNoiseMaterial = Material("mw19_thermalnoise.vmt")
-
-local function util_NormalizeAngles(a)
-    a.p =  math.NormalizeAngle(a.p)
-    a.y =  math.NormalizeAngle(a.y)
-    a.r =  math.NormalizeAngle(a.r)
-    
-    return a
-end
-
-function SWEP:RenderScreens()
-    if (self:GetAimModeDelta() > 0.5) then
-        return
-    end
-    
-    if (self:GetAimDelta() <= 0) then
-        return
-    end
-
-    if (self:GetSight() == nil) then
-        return
-    end
-
-    if (self:GetSight() != nil && self:GetSight().Optic == nil) then
-        return
-    end
-
-    local matrix = self:GetSight().m_Model:GetBoneMatrix(0)
-
-    if (matrix == nil) then
-        return
-    end
-    
-    local ang = matrix:GetAngles()
-
-    _rt.origin = self:GetOwner():EyePos()--sight:GetPos()
-    _rt.fov = self:GetSight().Optic.FOV
-    _rt.angles = ang
-
-    local angDif = util_NormalizeAngles(self:GetSight().m_Model:GetAngles() - self._eyeang) * math.max(15 - self:GetSight().Optic.FOV, 1) * 50
-
-    render.PushRenderTarget(self._RTTexture, 0, 0, 1024, 1024)
-    cam.Start2D()
-        render.Clear(0, 0, 0, 0)
-        render.RenderView(_rt)
-
-        DrawSharpen(1, 2)
-
-        --THERMALS:
-        if (self:GetSight().Optic.Thermal) then
-            DrawColorModify(thermalCC)
-
-            --NOISE:
-            surface.SetMaterial(ThermalNoiseMaterial)
-            surface.SetDrawColor(255, 255, 255, math.random(255))
-            surface.DrawTexturedRect(0, 0, ScrW() * 2, ScrH() * 2)
-            --
-
-            self:DrawThermalEntities()
-        end
-        ----
-
-        --REFRACT:
-        RefractMaterial:SetTexture("$basetexture", render.GetRenderTarget())
-        RefractMaterial:SetFloat("$refractamount", 0.1)
-
-        surface.SetMaterial(RefractMaterial)
-        surface.SetDrawColor(255, 255, 255, 255)
-
-        local rSize = math.cos(math.pi) * -self:GetSight().Optic.ParallaxSize * 0.5
-        local refractW, refractH = ScrW(), ScrH() * 0.75
-        surface.DrawTexturedRect((ScrW() - refractW) * -0.5 - (rSize * 0.5), (ScrH() - refractH) * 0.5 - (rSize * 0.5), refractW + rSize, refractH + rSize)
-
-        --REFTINT:
-        local tintSize = 400
-        surface.SetMaterial(RefractTintMaterial)
-        surface.SetDrawColor(0, 0, 0, 255)
-
-        for i = 1, 2, 1 do
-            surface.DrawTexturedRect(tintSize * -0.5, tintSize * -0.5, ScrW() + tintSize, ScrH() + tintSize)
-        end
-        ----
-
-        self:DrawParallax(matrix)
-
-        --FADE:
-        surface.SetDrawColor(0, 0, 0, (1 - self:GetAimDelta()) * 255)
-        surface.DrawRect(0, 0, ScrW(), ScrH())
-        ----
-	cam.End2D()
-	render.PopRenderTarget()
-    
-    self:GetSight().Optic.LensHideMaterial:SetTexture("$basetexture", self._RTTexture)
-end
-
-function SWEP:DrawParallax(matrix)
-    local ang = matrix:GetAngles()
-    ang:Sub(self._eyeang)
-    
-    local angDif = util_NormalizeAngles(ang) * math.max(15 - self:GetSight().Optic.FOV, 1) * 10--50
-
-    render.SetStencilWriteMask(0xFF)
-    render.SetStencilTestMask(0xFF)
-    render.SetStencilReferenceValue(0)
-    render.SetStencilCompareFunction(STENCIL_ALWAYS)
-    render.SetStencilPassOperation(STENCIL_REPLACE)
-    render.SetStencilFailOperation(STENCIL_KEEP)
-    render.SetStencilZFailOperation(STENCIL_KEEP)
-    render.SetStencilEnable(true)
-    render.SetStencilReferenceValue(MWBASE_STENCIL_REFVALUE + 1)
-
-    --RETICLE:
-    surface.SetMaterial(self:GetSight().Reticle.Material)
-
-    local color = self:GetSight().Reticle.Color
-    surface.SetDrawColor(color.r, color.g, color.b, color.a)
-
-    local size = self:GetSight().Reticle.Size 
-    for i = 1, GetConVar("mgbase_fx_reticle_brightness"):GetInt(), 1 do
-        surface.DrawTexturedRect(ScrW() * 0.5 - (size * 0.5) - angDif.y, ScrH() * 0.5 - (size * 0.5) + angDif.p, size, size)
-    end
-    ----
-    
-    --cam.Start2D()
-
-    surface.SetMaterial(ParallaxMaterial)
-    surface.SetDrawColor(0, 0, 0, 255)
-
-    local pSize = math.cos(self.ViewModelVars.LerpAimDelta * math.pi) * -self:GetSight().Optic.ParallaxSize
-    local x,y = (ScrW() * -0.5) - pSize * 0.5 - angDif.y, (ScrH() * -0.5) - pSize * 0.5 + angDif.p
-
-    surface.DrawTexturedRect(x, y, (ScrW() * 2) + pSize, (ScrH() * 2) + pSize)
-
-    --cam.End2D()
-
-    render.SetStencilCompareFunction(STENCIL_NOTEQUAL)
-
-    surface.SetDrawColor(0, 0, 0, 255)
-    surface.DrawRect(0, 0, ScrW(), ScrH())
-    
-    render.SetStencilEnable(false)
-    render.ClearStencil()
-end
 
 function SWEP:DrawThermalEntities()
     render.SetStencilWriteMask(0xFF)

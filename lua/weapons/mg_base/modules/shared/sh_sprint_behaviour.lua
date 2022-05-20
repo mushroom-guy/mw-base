@@ -18,6 +18,29 @@ function SWEP:CanPlaySprintOutAnim()
         && !self:IsCustomizing()
 end
 
+function SWEP:DoSprintIn()
+    self:StopCustomizing()
+         
+    if (!self:GetIsSprinting()) then
+        if (IsFirstTimePredicted()) then self:PlayViewModelAnimation("Sprint_In") end
+        self:PlayerGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, 0)
+    end
+    self:SetIsSprinting(true)
+    self:SetIsReloading(false)
+end
+
+function SWEP:DoSprintOut()
+    if (self:GetIsSprinting() || self.m_bSafety != self:GetSafety()) then
+        self:SetNextSprintTime(CurTime() + self:GetAnimLength("Sprint_Out"))
+
+        if (self:CanPlaySprintOutAnim()) then
+            if (IsFirstTimePredicted()) then self:PlayViewModelAnimation("Sprint_Out") end
+        end
+    end
+
+    self:SetIsSprinting(false)
+end
+
 function SWEP:SprintBehaviourModule()
     if (CLIENT && game.SinglePlayer()) then
         return
@@ -27,25 +50,15 @@ function SWEP:SprintBehaviourModule()
     --    self:SetIsSprinting(false)
     --end
     
-    if ((self:GetOwner():KeyDown(IN_SPEED) || self:GetOwner():WaterLevel() > 2 || self:GetSafety()) && self:CanSprint()) then
-        self:StopCustomizing()
-         
-        if (!self:GetIsSprinting()) then
-            if (IsFirstTimePredicted()) then self:PlayViewModelAnimation("Sprint_In") end
-            self:PlayerGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, 0)
-        end
-
-        self:SetIsSprinting(true)
-        self:SetIsReloading(false)
+    if ((self:GetOwner():KeyDown(IN_SPEED) || self:GetOwner():WaterLevel() > 2 || self:GetSafety() || self.m_bSafety != self:GetSafety()) && self:CanSprint()) then
+        self:DoSprintIn()
     else
-        if (self:GetIsSprinting()) then
-            self:SetNextSprintTime(CurTime() + self:GetAnimLength("Sprint_Out"))
-
-            if (self:CanPlaySprintOutAnim()) then
-                if (IsFirstTimePredicted()) then self:PlayViewModelAnimation("Sprint_Out") end
-            end
-        end
-
-        self:SetIsSprinting(false)
+        self:DoSprintOut()
     end
+
+    if (self.m_bSafety != self:GetSafety() && !self:GetSafety()) then
+        self:DoSprintOut()
+    end
+
+    self.m_bSafety = self:GetSafety()
 end
