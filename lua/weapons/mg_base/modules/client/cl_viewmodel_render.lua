@@ -188,11 +188,7 @@ function SWEP:RenderSight()
 
     local bRenderSightReticle = !GetConVar("mgbase_fx_cheap_reticles"):GetBool()
 
-    if (self:GetAimDelta() <= 0.9) then
-        self:GetSight().m_Model:DrawModel()
-    else
-        self:GetSight():RenderReticle(self)
-    end
+    self:GetSight():Render(self)
 end
 
 local small = Vector(0, 0, 0)
@@ -247,6 +243,9 @@ function SWEP:DrawBackgroundForCustomization()
     
         render.SetBlend(0)
         self:RenderModels(self.m_ViewModel)
+        if (self:GetSight() != nil) then
+            self:GetSight().m_Model:DrawModel()
+        end
         render.SetBlend(1)
 
     render.SetStencilCompareFunction(STENCIL_NOTEQUAL)

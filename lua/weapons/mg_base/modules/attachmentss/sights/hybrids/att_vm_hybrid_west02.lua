@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_hybrid"
 ATTACHMENT.Name = "4.0x Flip Hybrid"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_hybrid_west02.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/hybrid/icon_attachment_hybrid_west02_lw.vmt")

@@ -202,8 +202,8 @@ hook.Add("PopulateToolMenu", "CustomMenuSettings", function()
 		panel:CheckBox("Barrel Smoke", "mgbase_fx_smoke")
 		panel:ControlHelp("Toggle overheat smoke coming from the barrels.")
 		
-		panel:CheckBox("Cheap Reticles", "mgbase_fx_cheap_reticles")
-		panel:ControlHelp("Reticles stop rendering when not aiming.")
+		--panel:CheckBox("Cheap Reticles", "mgbase_fx_cheap_reticles")
+		--panel:ControlHelp("Reticles stop rendering when not aiming.")
 		
 		panel:CheckBox("View Blur FX", "mgbase_fx_blur")
 		panel:ControlHelp("Toggle DOF blur when reloading/customizing.")

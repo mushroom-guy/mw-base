@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_sight_reticle"
 ATTACHMENT.Name = "Solozero Optics Mini Reflex"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_minireddot02_mike1911.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/reticles/icon_attachment_minireddot02.vmt")
@@ -17,3 +17,11 @@ ATTACHMENT.AttachmentBodygroups ={
     ["tag_sight"] = 1,
     ["sight"] = 1
 }
+
+local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+function ATTACHMENT:Stats(weapon)
+    BaseClass.Stats(self, weapon)
+    
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.8
+    weapon.Zoom.FovMultiplier = 0.9
+end

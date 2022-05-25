@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_hybrid"
 ATTACHMENT.Name = "Solozero NVG Enhanced"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_west_01.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_thermal_west01.vmt")

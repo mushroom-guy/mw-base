@@ -40,7 +40,7 @@ matproxy.Add( {
 		local tint = color * Lerp(ent.m_MwEnvMapTint, self.min, self.max)
 
 		mat:SetVector("$envmaptint", tint)
-		mat:SetTexture("$envmap", self.envmap || "viper/shared/envmaps/envmap_chrome")
+		mat:SetTexture("$envmap", self.envmap || "viper/shared/envmaps/mw19_shoothouse_cubemap_hdr")
 	end
 })
 

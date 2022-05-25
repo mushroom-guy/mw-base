@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_hybrid"
 ATTACHMENT.Name = "Merc Thermal Optic"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_east_tall.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_thermal_east.vmt")

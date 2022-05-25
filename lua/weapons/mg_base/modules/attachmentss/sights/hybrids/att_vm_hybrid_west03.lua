@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_hybrid"
 ATTACHMENT.Name = "Canted Hybrid"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_hybrid_west03.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_4x_west02.vmt")

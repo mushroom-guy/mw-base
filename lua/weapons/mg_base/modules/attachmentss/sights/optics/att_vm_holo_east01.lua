@@ -3,13 +3,13 @@ ATTACHMENT.Name = "APX5 Holographic Sight"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_holo_east.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_holo_east.vmt")
 ATTACHMENT.Bodygroups ={
-    ["tag_sight"] = 2,
+    ["tag_sight"] = 1,
     ["tag_rail"] = 1,
-    ["sight"] = 2
+    ["sight"] = 1
 }
 ATTACHMENT.AttachmentBodygroups ={
-    ["tag_sight"] = 2,
-    ["sight"] = 2
+    ["tag_sight"] = 1,
+    ["sight"] = 1
 }
 ATTACHMENT.Optic = {
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_holo_east_lens.vmt"),
@@ -20,7 +20,7 @@ ATTACHMENT.Optic = {
 }
 ATTACHMENT.Reticle = {
     Material = Material("viper/mw/reticles/reticle_holo_default2.vmt"),
-    Size = 500,
+    Size = 400,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
@@ -28,10 +28,8 @@ local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
     
-    weapon.Zoom.ViewModelFovMultiplier = 0.9
-    weapon.Zoom.FovMultiplier = 0.7
     weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.97
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.97
-    weapon.Zoom.ViewModelFovMultiplier = 0.9
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.8
     weapon.Zoom.FovMultiplier = 0.7
 end

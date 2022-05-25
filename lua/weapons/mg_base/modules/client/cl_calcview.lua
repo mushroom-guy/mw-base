@@ -81,7 +81,8 @@ function SWEP:CalcView(ply, pos, ang, fov)
 
     self:VectorAddAndMul(pos, ang:Forward(), -self.Camera.Shake)
     
-    self.Camera.Fov = self:SafeLerp(10 * FrameTime(), self.Camera.Fov, self:GetAimDelta())
+    self.Camera.Fov = self:SafeLerp(20 * FrameTime(), self.Camera.Fov, self:GetAimDelta())
+    self.Camera.FovAimDelta = self:SafeLerp(20 * FrameTime(), self.Camera.FovAimDelta || 0, self:GetAimModeDelta())
 
     local diff = 0
 
@@ -89,9 +90,10 @@ function SWEP:CalcView(ply, pos, ang, fov)
         diff = (1 - self.Zoom.FovMultiplier) * 0.25
     end
 
-    self.Camera.LerpReloadFov = self:SafeLerp(4 * FrameTime(), self.Camera.LerpReloadFov, diff)
+    self.Camera.LerpReloadFov = self:SafeLerp(10 * FrameTime(), self.Camera.LerpReloadFov, diff)
 
-    local fovMultiplier = self:SafeLerp(self.Camera.Fov, 1, self.Zoom.FovMultiplier + self.Camera.LerpReloadFov)
+    local zoom = Lerp(self.Camera.FovAimDelta, self.Zoom.FovMultiplier, 0.9)
+    local fovMultiplier = self:SafeLerp(self.Camera.Fov, 1, zoom + self.Camera.LerpReloadFov)
 
     fov = (fov * fovMultiplier) + (self.Camera.Shake * 1.5)
 

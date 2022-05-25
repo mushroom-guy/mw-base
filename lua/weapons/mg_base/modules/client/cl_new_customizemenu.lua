@@ -37,6 +37,8 @@ local greyColor = Color(255, 255, 255, 150)
 local shadowColor = Color(0, 0, 0, 20)
 local backgroundErrorColor = Color(50, 0, 0, 150)
 local errorColor = Color(150, 0, 0, 255)
+local greenColor = Color(0, 210, 20, 255)
+local redColor = Color(230, 0, 30, 255)
 
 --opening the menu if no mgbase_customize bind (context menu)
 hook.Add("OnContextMenuOpen", "MW_ContextMenu", function()
@@ -65,6 +67,107 @@ end
 
 MW_CUSTOMIZEMENU = nil
 
+local function openStatsInfo(panel, attachment, weapon)
+    if (attachment.Breadcrumbs == nil) then --from attachments selection list
+        weapon:MakeBreadcrumbsForAttachment(attachment)
+    end
+
+    local count = table.Count(attachment.Breadcrumbs)
+    if (attachment.Breadcrumbs == nil || count <= 0) then
+        return
+    end
+
+    if (!IsValid(panel.hover)) then
+        panel.hover = vgui.Create("DPanel")
+        panel.hover.parent = panel
+        local x, y = panel:LocalToScreen(panel:GetPos())
+        panel.hover:SetPos(x + panel:GetWide() + 20, y + 20)
+        panel.hover:SetSize(400, 50 * count)
+        panel.hover:SetMouseInputEnabled(false)
+        panel.hover:NoClipping(true)
+        function panel.hover:Think()
+            if (!IsValid(self.parent)) then
+                self:Remove()
+                return
+            end
+            
+            self:SetPos(math.Clamp(gui.MouseX() + 30, 0, ScrW() - self:GetWide()), math.Clamp(gui.MouseY() + 30, 0, ScrH() - self:GetTall()))
+        end
+        function panel.hover:Paint(w, h)
+            surface.SetMaterial(blurMaterial)
+            surface.SetDrawColor(255, 255, 255, 255)
+
+            for i = 1, 10, 1 do
+                render.UpdateScreenEffectTexture()
+                self:DrawTexturedRect()
+            end
+
+            surface.SetDrawColor(blackColor.r, blackColor.g, blackColor.b, blackColor.a)
+            self:DrawFilledRect()
+
+            --white fade
+            surface.SetMaterial(buttonGlowMaterial)
+            surface.SetDrawColor(whiteColor.r, whiteColor.g, whiteColor.b, whiteColor.a * 0.02)
+            surface.DrawTexturedRect(0, h * 0.5, w, h * 0.5)
+        end
+        function panel.hover:PaintOver(w, h)
+            surface.SetDrawColor(whiteColor.r, whiteColor.g, whiteColor.b, whiteColor.a)
+            
+            --long line on the right
+            surface.DrawLine(w + 5, 15, w + 5, h - 15)
+
+            --corner lines
+            surface.DrawLine(-5, -5, -5, 5)
+            surface.DrawLine(-5, -5, 5, -5)
+        end
+
+        local statsGrid = vgui.Create("DGrid", panel.hover)
+        statsGrid:SetPos(0, 0)
+        statsGrid:SetCols(1)
+        statsGrid:SetColWide(panel.hover:GetWide())
+        statsGrid:SetRowHeight(50)
+        statsGrid:Dock(FILL)
+
+        for statInfo, crumb in SortedPairs(attachment.Breadcrumbs) do
+            local statPanel = vgui.Create("DPanel")
+            statPanel:SetSize(statsGrid:GetColWide(), statsGrid:GetRowHeight())
+            function statPanel:Paint(w, h)
+                local statInfo = weapon.StatInfo[statInfo]
+                draw.SimpleText(statInfo.Name, "mgbase_statName", 10, h * 0.5, whiteColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+                local bPositive = crumb.Current < crumb.Original
+
+                if (statInfo.ProIfMore) then
+                    bPositive = !bPositive
+                end
+
+                local statColor = bPositive && greenColor || redColor
+                local statText = math.Round(crumb.Current - crumb.Original, 1)
+                if (statInfo.ShowPercentage) then
+                    statText = math.Round((crumb.Current - crumb.Original) / crumb.Original * 100, 1).."%"
+                end
+
+                statText = (bPositive && "⮝ " || "⮟ ")..statText
+
+                draw.SimpleText(statText, "mgbase_stat", w - 10, h * 0.5, statColor, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+
+                local c = Color(statColor.r, statColor.g, statColor.b, statColor.a * 0.5)
+                draw.SimpleText(statText, "mgbase_statPositive", w - 10, h * 0.5, c, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+            end
+
+            statsGrid:AddItem(statPanel)
+        end
+    end
+end
+
+local function closeStatsInfo(panel)
+    if (!IsValid(panel.hover)) then
+        return
+    end
+
+    panel.hover:Remove()
+end
+
 local function openCategoryList(categoryName, weapon, buttonFrom)
     local background = vgui.Create("DFrame", MW_CUSTOMIZEMENU)
     background:SetPos(0, 0)
@@ -72,6 +175,13 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
     background:ShowCloseButton(false) 
     background:SetDraggable(false)
     background:Center()
+
+    function background:Think()
+        if (GetViewEntity():KeyDown(IN_USE)) then
+            self:Remove()
+        end
+    end
+
     function background:Paint(width, height)
         Derma_DrawBackgroundBlur(self, self.m_fCreateTime)
     end
@@ -80,7 +190,7 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
 
     for slot, attachmentClasses in pairs(weapon.Customization) do
         for i, attachmentClass in pairs(attachmentClasses) do
-            local att = weapon:GetStoredAttachment(attachmentClass)
+            local att = table.Copy(weapon:GetStoredAttachment(attachmentClass))
             if (att.Category == categoryName && i > 1 && weapon:GetAttachmentInUseForSlot(slot).ClassName != attachmentClass) then
                 atts[#atts + 1] = att
             end
@@ -110,7 +220,7 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
     headerPanel:SetSize(0, 40)
     headerPanel:DockMargin(20, 0, 20, 10)
     function headerPanel:Paint(w, h)
-        draw.SimpleText(string.upper(categoryName), "mgbase_attSlot", 0, h * 0.5, whiteColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+        draw.SimpleText(string.upper(categoryName), "mgbase_attSlotMenu", 0, h * 0.5, whiteColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
     end 
 
     local closeButton = vgui.Create("DButton", headerPanel)
@@ -171,7 +281,7 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
     attachmentsGrid:DockMargin(20, 0, 0, 0)
 
     for _, attachment in SortedPairsByMemberValue(atts, "Name") do
-        --panel to hold buitton
+        --panel to hold button
         local attachmentPanel = vgui.Create("DPanel")
         attachmentPanel:SetSize(attachmentsGrid:GetColWide() * 0.9, attachmentsGrid:GetRowHeight())
         function attachmentPanel:Paint(w, h)
@@ -192,21 +302,24 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
 
         function but:Paint(width, height)
             if (self:IsHovered()) then
-                self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * FrameTime(), 0.1))
+                self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * RealFrameTime(), 0.1))
 
                 if (!self.bWasHovered) then
                     surface.PlaySound(hoverAttachmentSounds[math.random(1, #hoverAttachmentSounds)])
                 end
                 self.bWasHovered = true
+
+                openStatsInfo(self, attachment, weapon)
             else
-                self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * FrameTime(), 0.1))
+                self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * RealFrameTime(), 0.1))
                 self.bWasHovered = false
+                closeStatsInfo(self)
             end
 
             if (self:IsDown()) then
-                self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * FrameTime(), 0.1))
+                self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * RealFrameTime(), 0.1))
             else
-                self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * FrameTime(), 0.1))
+                self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * RealFrameTime(), 0.1))
             end
 
             local currentColor = self.IsAllowed && blackColor || backgroundErrorColor
@@ -307,7 +420,11 @@ local function openCustomizationMenu(weapon)
             return
         end
 
-        self.AlphaDelta = Lerp(math.min(10 * FrameTime(), 1), self.AlphaDelta, 1)
+        if (!GetViewEntity():KeyDown(IN_USE)) then
+            self.AlphaDelta = Lerp(math.min(10 * RealFrameTime(), 1), self.AlphaDelta, 1)
+        else
+            self.AlphaDelta = Lerp(math.min(10 * RealFrameTime(), 1), self.AlphaDelta, 0)
+        end
 
         --open blur thing
         local size = 1500 * self.AlphaDelta
@@ -325,9 +442,6 @@ local function openCustomizationMenu(weapon)
 
         --gun name
         draw.SimpleTextOutlined(weapon.PrintName, "mgbase_attWeaponName", ScrW() * 0.5, ScrH() * 0.1 + animHeight - (1 - self.AlphaDelta) * animHeight, Color(255, 255, 255, self.AlphaDelta * 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, self.AlphaDelta * 20))
-    
-        --stats
-        weapon:DrawProsAndCons()
     end
 
     function MW_CUSTOMIZEMENU:Think()
@@ -359,6 +473,17 @@ local function openCustomizationMenu(weapon)
     categoriesMenu:SetPos(100, ScrH() * 0.2)
     categoriesMenu:SetSize(600, ScrH() * 0.6)
     --categoriesMenu:MoveTo(100, ScrH() * 0.2, 0.3, 0, 10)
+    function categoriesMenu:Think()
+        local x, y = self:GetPos()
+
+        if (!GetViewEntity():KeyDown(IN_USE)) then
+            x = math.Approach(x, 100, 5000 * RealFrameTime())
+        else
+            x = math.Approach(x, -600, 5000 * RealFrameTime())
+        end
+
+        self:SetPos(x, y)
+    end
 
     function categoriesMenu:Paint(w, h)
     --    surface.SetDrawColor(255, 0, 0, 255)
@@ -444,14 +569,14 @@ local function openCustomizationMenu(weapon)
 
         function but:Paint(width, height)
             if (self:IsHovered()) then
-                self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * FrameTime(), 0.1))
+                self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * RealFrameTime(), 0.1))
 
                 if (!self.bWasHovered) then
                     surface.PlaySound(hoverSounds[math.random(1, #hoverSounds)])
                 end
                 self.bWasHovered = true
             else
-                self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * FrameTime(), 0.1))
+                self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * RealFrameTime(), 0.1))
                 self.bWasHovered = false
             end
 
@@ -460,9 +585,9 @@ local function openCustomizationMenu(weapon)
             end
 
             if (self:IsDown()) then
-                self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * FrameTime(), 0.1))
+                self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * RealFrameTime(), 0.1))
             else
-                self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * FrameTime(), 0.1))
+                self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * RealFrameTime(), 0.1))
             end
 
             local currentColor = self.AvailableAttachments <= 0 && backgroundErrorColor || blackColor
@@ -488,18 +613,18 @@ local function openCustomizationMenu(weapon)
 
             --category
             local text = string.upper(categoryName)
-            draw.SimpleText(text, "mgbase_attSlot", width * 0.5, height * 0.5, currentColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(text, "mgbase_attSlotMenu", width * 0.5, height * 0.5, currentColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
             local hoverColor = Color(currentColor.r, currentColor.g, currentColor.b, currentColor.a * self.HoverDelta)
-            draw.SimpleText(text, "mgbase_attSlot:hover", width * 0.5, height * 0.5, hoverColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            draw.SimpleText(text, "mgbase_attSlotMenu:hover", width * 0.5, height * 0.5, hoverColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
         end
 
         --panel to show what attachment we have in use (empty if default)
         local removeAttachmentButton = vgui.Create("DButton", categoryPanel)
         removeAttachmentButton:SetSize(400, categoriesGrid:GetRowHeight())
         removeAttachmentButton:SetText("")
-        removeAttachmentButton:Dock(RIGHT)
-        removeAttachmentButton:DockMargin(0, 0, -10, 0) --left doesn't work...
+        removeAttachmentButton:Dock(LEFT)
+        removeAttachmentButton:DockMargin(10, 0, 0, 0)
         removeAttachmentButton.HoverDelta = 0
         removeAttachmentButton.HoverDelta2 = 0 --alternative so att button doesn't higlight other elements
         removeAttachmentButton.ClickDelta = 0
@@ -509,6 +634,11 @@ local function openCustomizationMenu(weapon)
 
         --link to button so we have consistent hover delta anim
         but.inUsePanel = removeAttachmentButton
+
+        function removeAttachmentButton:TestHover(x, y)
+            local x, y = self:ScreenToLocal(x, y) -- Convert to local coordinates
+            return x >= 0 && y >= 0 && x <= self:GetWide() * 0.65 && y <= self:GetTall() 
+        end
 
         function removeAttachmentButton:Think()
             if (!validWeapon(weapon)) then
@@ -543,7 +673,14 @@ local function openCustomizationMenu(weapon)
             end
 
             if (attachmentInUse == nil) then
+                closeStatsInfo(self)
                 return
+            end
+
+            if (self:IsHovered()) then
+                openStatsInfo(self, attachmentInUse, weapon)
+            else
+                closeStatsInfo(self)
             end
 
             if (self.LastAttachmentIndex != attachmentInUse.Index) then
@@ -555,8 +692,8 @@ local function openCustomizationMenu(weapon)
             end
 
             if (self:IsHovered()) then
-                self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * FrameTime(), 0.1))
-                self.HoverDelta2 = math.Approach(self.HoverDelta2, 1, math.min(10 * FrameTime(), 0.1))
+                self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * RealFrameTime(), 0.1))
+                self.HoverDelta2 = math.Approach(self.HoverDelta2, 1, math.min(10 * RealFrameTime(), 0.1))
 
                 if (!self.bWasHovered) then
                     surface.PlaySound(hoverAttachmentSounds[math.random(1, #hoverAttachmentSounds)])
@@ -564,18 +701,18 @@ local function openCustomizationMenu(weapon)
 
                 self.bWasHovered = true
             else
-                self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * FrameTime(), 0.1))
-                self.HoverDelta2 = math.Approach(self.HoverDelta2, 0, math.min(10 * FrameTime(), 0.1))
+                self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * RealFrameTime(), 0.1))
+                self.HoverDelta2 = math.Approach(self.HoverDelta2, 0, math.min(10 * RealFrameTime(), 0.1))
                 self.bWasHovered = false
             end
 
             if (self:IsDown()) then
-                self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * FrameTime(), 0.1))
+                self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * RealFrameTime(), 0.1))
             else
-                self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * FrameTime(), 0.1))
+                self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * RealFrameTime(), 0.1))
             end
 
-            self.AttachmentDelta = math.Approach(self.AttachmentDelta, 1, math.min(10 * FrameTime(), 0.1))
+            self.AttachmentDelta = math.Approach(self.AttachmentDelta, 1, math.min(10 * RealFrameTime(), 0.1))
 
             surface.SetAlphaMultiplier(self.AttachmentDelta)
 
@@ -742,54 +879,4 @@ function SWEP:DrawStats()
 
     statBeforeLineX, statBeforeLineY = self:DrawStat("SprintLength", "s", c, original.Animations.Sprint_Out.Length / (original.Animations.Sprint_Out.Fps / 30), self:GetAnimLength("Sprint_Out"))
     c = c + 1
-end
-
-function SWEP:DrawProsAndCons()
-	local x,y = ScrW() * 0.95, ScrH() * 0.5
-	local scale = ScrH() / 1080
-	local c = 0
-	for i, v in pairs(self.StatBreadcrumbs) do
-        local info = self.StatInfo[self.StatDefinitions[i]]
-
-		if (info == nil) then
-			continue
-		end
-
-		c = c + 1
-	end
-
-	local spacing = 25 * scale
-	y = y - ((c * spacing) * 0.5)
-	c = 0
-	for i, v in SortedPairs(self.StatBreadcrumbs) do
-		local info = self.StatInfo[self.StatDefinitions[i]]
-
-		if (info == nil) then
-			continue
-		end
-
-		local isPro = v.Current >= v.Source
-
-        if (!info.ProIfMore) then
-            isPro = v.Current <= v.Source
-        end
-
-        local valuePercentage = math.abs((math.Round(v.Current / v.Source * 100) - 100))
-		local percentage = valuePercentage.."%"
-
-		if (!info.ShowPercentage) then
-			percentage = math.abs(v.Source - v.Current)
-		end
-
-        if (valuePercentage < 1) then
-            continue
-        end
-
-        c = c + 1
-
-		percentage = (v.Current > v.Source && "+" || "-")..percentage
-
-		draw.SimpleTextOutlined(info.Name, "mgbase_firemode", x - 20 * scale, y + c * spacing, Color(255, 255, 255, 200), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER, 2, Color(0, 0, 0, 20))
-		draw.SimpleTextOutlined(percentage, "mgbase_firemode", x, y + c * spacing, isPro && Color(0, 200, 0, 255) || Color(200, 0, 0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER, 2, Color(0, 0, 0, 20))
-	end
 end

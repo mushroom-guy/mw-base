@@ -761,41 +761,6 @@ function SWEP:DeepObjectCopy(defaults, tbl)
     end
 end 
 
---this makes breadcrumbs to any stat that has changed (besides a few).
-function SWEP:MakeBreadcrumbs(arrayToHoldDifferences, previousIndex, source, target)
-    for i, v in pairs(source) do
-        if (tostring(i) == "BaseClass") then
-            continue
-        end
-
-        if (tostring(i) == "m_Index") then
-            continue 
-        end
-
-        if (isnumber(v)) then
-            if (target[i] != v) then
-                local parent = arrayToHoldDifferences
-                local path = {i, previousIndex}
-
-                while (parent != nil) do
-                    path[#path + 1] = parent.DIFF_ParentIndex
-                    parent = parent.DIFF_Parent
-                end
-
-                path = table.Reverse(path)
-                self.StatBreadcrumbs[table.concat(path, ".")] = {Current = math.abs(target[i]), Source = math.abs(v)}
-            end 
-        elseif (istable(v) && target[i] != nil) then
-            arrayToHoldDifferences[i] = {}
-            arrayToHoldDifferences[i].DIFF_Parent = arrayToHoldDifferences
-            arrayToHoldDifferences[i].DIFF_ParentIndex = previousIndex
-            self:MakeBreadcrumbs(arrayToHoldDifferences[i], i, v, target[i])
-        end
-    end
-
-    return arrayToHoldDifferences
-end
-
 function SWEP:RemoveValue(valIndex)
     self.ValuesToRemove[#self.ValuesToRemove + 1] = valIndex
 end

@@ -117,6 +117,18 @@ function SWEP:CanDrawCrosshair()
 		&& CurTime() > self:GetNextMeleeTime()
 end
 
+function SWEP:HUDShouldDraw(name)
+	if (self:IsCustomizing()) then
+		return name != "CHudAmmo" && name != "CHudBattery" && name != "CHudHealth" && name != "CHudSecondaryAmmo" && name != "CHudSuitPower" && name != "CHUDQuickInfo"
+	end
+
+	if (self:GetIsAiming() && name == "CHUDQuickInfo") then
+		return false
+	end
+
+	return true
+end
+
 function SWEP:DrawCrosshairSticks(x, y)
 	local aimDelta = 1 - self:GetAimDelta()
 
@@ -187,6 +199,25 @@ local function CreateFonts()
 		weight = 0
 	})
 
+	surface.CreateFont("mgbase_statName", {
+		font = "BioSansW05-Light",
+		size = 24,
+		weight = 0
+	})
+
+	surface.CreateFont("mgbase_stat", {
+		font = "BioSansW05-Light",
+		size = 22,
+		weight = 0
+	})
+
+	surface.CreateFont("mgbase_statPositive", {
+		font = "BioSansW05-Light",
+		size = 22,
+		weight = 0,
+		blursize = 2
+	})
+
 	surface.CreateFont("mgbase_firemode_alt", {
 		font = "BioSansW05-Light",
 		size = 24 * scale,
@@ -199,30 +230,42 @@ local function CreateFonts()
 		weight = 500
 	})
 
-	surface.CreateFont("mgbase_attSlotAttachmentInUse", {
+	surface.CreateFont("mgbase_attSlotMenu", {
 		font = "Conduit ITC",
-		size = 24 * scale,
+		size = 24,
 		weight = 500
 	})
 
-	surface.CreateFont("mgbase_attSlotAttachmentInUse_IsCosmetic", {
+	surface.CreateFont("mgbase_attSlotAttachmentInUse", {
 		font = "BioSansW05-Light",
-		size = 20 * scale,
+		size = 24,
+		weight = 0
+	})
+
+	surface.CreateFont("mgbase_attSlotAttachmentInUse_IsCosmetic", {
+		font = "Conduit ITC",
+		size = 20,
 		weight = 500
 	})
 
 	surface.CreateFont("mgbase_attSlotAttachmentInUse:hover", {
-		font = "Conduit ITC",
-		size = 24 * scale,
-		weight = 500,
+		font = "BioSansW05-Light",
+		size = 24,
+		weight = 0,
 		blursize = 1
 	})
 
-	surface.CreateFont("mgbase_attSlot:hover", {
+	surface.CreateFont("mgbase_attSlotMenu:hover", {
 		font = "Conduit ITC",
-		size = 24 * scale,
+		size = 24,
 		weight = 500,
 		blursize  = 2
+	})
+
+	surface.CreateFont("mgbase_attSlotMenu", {
+		font = "Conduit ITC",
+		size = 24,
+		weight = 500
 	})
 
 	surface.CreateFont("mgbase_attName", {

@@ -7,20 +7,6 @@ if (CLIENT) then
     end)
 end
 
-local function recreateRenderTarget(self)
-    --[[self._RTTexture = GetRenderTargetEx(
-        "mw19_rt", 
-        512, 
-        512, 
-        RT_SIZE_NO_CHANGE,
-        MATERIAL_RT_DEPTH_SEPARATE,
-        bit.bor(2, 256),
-        0,
-        IMAGE_FORMAT_BGRA8888
-    )]]
-    self._RTTexture = GetRenderTarget("mw19_rt", 512, 512)
-end
-
 function SWEP:StopCustomizing()
     if (self:IsCustomizing()) then
         
@@ -121,7 +107,9 @@ local function doAttBodygroups(wep, model)
         if (att.AttachmentBodygroups != nil) then
             for bodyGroupName, value in pairs(att.AttachmentBodygroups) do
                 local id = model:FindBodygroupByName(bodyGroupName)
-                model:SetBodygroup(id, value)
+                if (id != -1) then
+                    model:SetBodygroup(id, value)
+                end
             end
         end
     end
@@ -289,6 +277,7 @@ function SWEP:BuildCustomizedGun()
 
         if (attachment.Index > 1) then
             attachment:Stats(stats)
+            self:MakeBreadcrumbsForAttachment(attachment)
         end
     end
     
@@ -303,50 +292,6 @@ function SWEP:BuildCustomizedGun()
     for slot, att in pairs(self:GetAllAttachmentsInUse()) do
         att:PostProcess(self)
     end
-
-    ----BREADCRUMBS
-    --generate em
-    self.StatBreadcrumbs = {}
-    local diffs = self:MakeBreadcrumbs({}, "SWEP", weapons.Get(self:GetClass()), self)
-
-    --check for duplicates
-    local dupes = {}
-    for path, key in pairs(self.StatDefinitions) do
-        if (dupes[key] == nil) then
-            dupes[key] = {}
-        end
-
-        if (self.StatBreadcrumbs[path] != nil) then
-            dupes[key][#dupes[key] + 1] = self.StatBreadcrumbs[path]
-            dupes[key][#dupes[key]].path = path
-        end
-    end
-
-    for key, crumbs in pairs(dupes) do
-        if (#crumbs <= 0) then
-            continue
-        end
-        
-        local size = 0
-        local winner = nil
-
-        for i, crumb in pairs(crumbs) do
-            local diff = math.abs(crumb.Current - crumb.Source)
-            if (diff > size) then
-                size = diff
-                winner = crumb
-            end
-        end
-
-        if (winner != nil) then
-            for i, crumb in pairs(crumbs) do
-                if (crumb != winner) then
-                    self.StatBreadcrumbs[crumb.path] = nil
-                end
-            end
-        end
-    end
-    ----end breadcrumbs
     
     --check magazine:
     if (IsValid(self:GetOwner())) then
@@ -398,6 +343,45 @@ function SWEP:BuildCustomizedGun()
         if !IsValid(self) then return end
         self:SetShouldHoldType(true)
     end)
+end
+
+--old way was just overcomplicated for no reason
+function SWEP:MakeBreadcrumbsForAttachment(attachment)
+    if (attachment.Breadcrumbs == nil) then
+        --make breadcrumbs
+        --make another copy of swep
+        local breadcrumbs = {}
+        self:DeepObjectCopy(weapons.Get(self:GetClass()), breadcrumbs)
+        attachment:Stats(breadcrumbs) --run stats (lol he doesnt know its actually not a gun!!)
+
+        --make bcs
+        attachment.Breadcrumbs = {}
+        self:MakeBreadcrumbs(attachment.Breadcrumbs, weapons.Get(self:GetClass()), breadcrumbs) --looks at differences in numbers only
+    end
+end
+
+function SWEP:MakeBreadcrumbs(holder, original, changed, currentPath)
+    currentPath = currentPath || "SWEP"
+
+    for k, v in pairs(original) do
+        if (tostring(k) == "BaseClass" || tostring(k) == "m_Index") then
+            continue
+        end
+
+        if (isnumber(v)) then
+            if (changed[k] != v) then
+                local path = currentPath.."."..tostring(k)
+                if (self.StatDefinitions[path] == nil) then
+                    continue
+                end
+
+                holder[self.StatDefinitions[path]] = holder[self.StatDefinitions[path]] || {}
+                table.Merge(holder[self.StatDefinitions[path]], {Original = v, Current = changed[k]}) 
+            end
+        elseif (istable(v) && changed[k] != nil) then
+            self:MakeBreadcrumbs(holder, v, changed[k], currentPath.."."..tostring(k))
+        end
+    end
 end
 
 function SWEP:VectorAddAndMul(current, add, mul)
@@ -465,14 +449,6 @@ function SWEP:RenderCustomization(model)
         end
     end
 
-    local optic = self:GetSight() != nil && self:GetSight().Optic || nil
-    if (optic != nil) then
-        self:GetSight().m_Model:SetBodygroup(
-            self:GetSight().m_Model:FindBodygroupByName(optic.LensBodygroup), 
-            self:GetAimModeDelta() <= self.m_hybridSwitchThreshold && self:GetAimDelta() > 0.9 && 0 || 1
-        )
-    end
-
     self:DrawLaser(model)
 
     if (GetViewEntity() == self:GetOwner()) then
@@ -506,13 +482,13 @@ function SWEP:DoBodygroup(name, value)
     local ind = self.m_ViewModel:FindBodygroupByName(name)
 
     if (ind != -1) then
-        self.m_ViewModel:SetBodygroup(ind, self.m_ViewModel:GetBodygroup(ind) + value)
+        self.m_ViewModel:SetBodygroup(ind, value)
     end
 
     ind = self.m_WorldModel:FindBodygroupByName(name)
 
     if (ind != -1) then
-        self.m_WorldModel:SetBodygroup(ind, self.m_WorldModel:GetBodygroup(ind) + value)
+        self.m_WorldModel:SetBodygroup(ind, value)
     end
 end
 
@@ -575,6 +551,10 @@ end)
 
 function SWEP:HasAttachment(class)
     if (self.Customization == nil) then
+        return false
+    end
+
+    if (self.m_CustomizationInUse == nil) then
         return false
     end
     
@@ -720,7 +700,6 @@ if (SERVER) then
     return
 end
 
-recreateRenderTarget(SWEP)
 local ParallaxMaterial = Material("mw19_parallax.vmt")
 local RefractMaterial = Material("mw19_scoperefract.vmt")
 local RefractTintMaterial = Material("mw19_refracttint.vmt")

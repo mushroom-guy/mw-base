@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_optic"
 ATTACHMENT.Name = "VLK 3.0x Optic"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_4x_east.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_4x_east.vmt")
@@ -13,6 +13,7 @@ ATTACHMENT.AttachmentBodygroups ={
 }
 ATTACHMENT.Optic = {
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_4x_east_lens.vmt"),
+    HideModel = Model("models/viper/mw/attachments/attachment_vm_4x_east_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 7, 
     ParallaxSize = 0, --a value of zero means 1:1 size with the end of the optic
@@ -30,6 +31,6 @@ function ATTACHMENT:Stats(weapon)
     
     weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.94
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.94
-    weapon.Zoom.ViewModelFovMultiplier = 0.8
-    weapon.Zoom.FovMultiplier = 0.7
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.8
+    weapon.Zoom.FovMultiplier = 0.65
 end

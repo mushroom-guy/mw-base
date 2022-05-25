@@ -161,11 +161,16 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
         dmgInfo:SetDamageType(DMG_BULLET)
     end
 
-    dmgInfo:SetDamageForce(tr.Normal * (self.Bullet.Damage[2] * self.Bullet.PhysicsMultiplier * 200))
+    dmgInfo:SetDamageForce(tr.Normal * (self.Bullet.Damage[2] * self.Bullet.PhysicsMultiplier * 200) / self.Bullet.NumBullets)
 
     local bInWater = bit.band(util.PointContents(tr.HitPos), CONTENTS_WATER) == CONTENTS_WATER
 
     if (!bInWater) then
+        for _, att in pairs(self:GetAllAttachmentsInUse()) do
+            if (att.OnImpact != nil) then
+                att:OnImpact(self, dmgInfo, tr)
+            end
+        end
         --TODO
         --[[if (self:HasAttachment("sh_db")) then
             if (SERVER && table.HasValue(self.FireSurfaces, tr.MatType)) then

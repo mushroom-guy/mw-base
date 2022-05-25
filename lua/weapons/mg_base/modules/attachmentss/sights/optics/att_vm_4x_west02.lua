@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_optic"
 ATTACHMENT.Name = "Cronen C480 Pro Optic"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_4x_west02.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_4x_west02.vmt")
@@ -13,6 +13,7 @@ ATTACHMENT.AttachmentBodygroups ={
 }
 ATTACHMENT.Optic = {
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_4x_west02_lens.vmt"),
+    HideModel = Model("models/viper/mw/attachments/attachment_vm_4x_west02_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 7, 
     ParallaxSize = 200, --a value of zero means 1:1 size with the end of the optic
@@ -30,6 +31,6 @@ function ATTACHMENT:Stats(weapon)
 
     weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.9
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = 0.8
-    weapon.Zoom.FovMultiplier = 0.7
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.2
+    weapon.Zoom.FovMultiplier = 0.4
 end

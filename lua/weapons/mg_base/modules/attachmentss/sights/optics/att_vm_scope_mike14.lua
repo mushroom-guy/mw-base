@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_optic"
 ATTACHMENT.Name = "Sniper Scope"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/weapon_vm_scope_mike14_alt.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_snprscope_mike14.vmt")
@@ -14,6 +14,7 @@ ATTACHMENT.AttachmentBodygroups ={
 }
 ATTACHMENT.Optic = {
     LensHideMaterial = Material("viper/MW/attachments/weapon_vm_sn_mike14_scope_lens.vmt"),
+    HideModel = Model("models/viper/mw/attachments/weapon_vm_scope_mike14_alt_lens_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 3, 
     ParallaxSize = 600, --a value of zero means 1:1 size with the end of the optic
@@ -21,7 +22,7 @@ ATTACHMENT.Optic = {
 }
 ATTACHMENT.Reticle = {
     Material = Material("viper/mw/reticles/reticle_int_default.vmt"),
-    Size = 800,
+    Size = 500,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
@@ -33,6 +34,6 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.7
     weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.9
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = 0.95
-    weapon.Zoom.FovMultiplier = 0.65
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.65
+    weapon.Zoom.FovMultiplier = 0.25
 end

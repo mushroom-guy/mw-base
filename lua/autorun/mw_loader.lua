@@ -25,6 +25,7 @@ CHAN_MAGAZINEDROP = 142
 CHAN_WPNFOLEY = 143
 
 
+CUSTOMIZATION_COLOR_COMMON = Color(0, 220, 30, 255)
 CUSTOMIZATION_COLOR_LEGENDARY = Color(255, 175, 0, 255)
 CUSTOMIZATION_COLOR_EPIC = Color(255, 0, 150, 255)
 CUSTOMIZATION_COLOR_RARE = Color(0, 175, 255, 255)
@@ -84,13 +85,14 @@ function Model(dir) --sorry
 end    
     
 local function loadAttachments(dir) 
-    dir = dir .. "/"   
+    dir = dir .. "/"    
     local File, Directory = file.Find(dir.."*", "LUA")
     for k, v in ipairs(File) do
         if string.EndsWith(v, ".lua") then   
-            ATTACHMENT = {}
+            ATTACHMENT = {} 
              
             local name = string.Replace(v, ".lua", "")
+            
             AddCSLuaFile(dir..v)
             include(dir..v)
              
@@ -98,21 +100,29 @@ local function loadAttachments(dir)
             table.Merge(GetAttachmentBaseClass(name), table.Copy(ATTACHMENT))
         end 
     end
-    
+     
     for k, v in ipairs(Directory) do
         loadAttachments(dir..v)
     end 
 end
-
+ 
 loadAttachments("weapons/mg_base/modules/attachmentss")
 Model = oldModel
   
 --check baseclass 
 local function checkBaseClassInAttachments()
     for name, att in pairs(MW_ATTS) do
+        if (istable(name)) then
+            error("You may have defined BaseClass twice! "..(name.Name || "error class"))
+        end
+
         if (name != "att_base") then
             if (att.Base == nil) then
                 error(name.." doesn't inherit from anything! This will cause problems...")
+            end
+
+            if (att.Base == name) then
+                error("You are inheriting from self (Base = myself)! This would freeze your game. ("..name..")")
             end
 
             if (MW_ATTS[att.Base] == nil) then
@@ -124,11 +134,26 @@ end
 checkBaseClassInAttachments()
 
 --inherit
+local function inherit(current, base)
+    for k, v in pairs(base) do
+        if (!istable(v)) then
+            if (current[k] == nil) then
+                current[k] = v
+            end
+        else
+            if (current[k] == nil) then
+                current[k] = {}
+            end
+            inherit(current[k], v)
+        end
+    end
+end
+
 local function finishAttachments()
     for name, att in pairs(MW_ATTS) do
         local baseClass = MW_ATTS[att.Base]
         while (baseClass != nil) do
-            table.Inherit(att, baseClass)
+            inherit(att, baseClass)
             baseClass = MW_ATTS[baseClass.Base]
         end
     end
@@ -154,8 +179,6 @@ local function loadInjectors(dir)
             if (!table.IsEmpty(INJECTOR)) then
                 MW_ATT_INJECTORS[name] = table.Copy(INJECTOR)
             end
-            
-            INJECTOR = nil 
         end 
     end
     

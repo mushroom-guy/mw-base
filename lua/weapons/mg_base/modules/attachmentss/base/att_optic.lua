@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_sight"
+ATTACHMENT.Base = "att_sight_reticle"
 
 if (SERVER) then
     return
@@ -21,11 +21,7 @@ function ATTACHMENT:Init(weapon)
     BaseClass.Init(self, weapon)
     
     self.hideModel = ClientsideModel(self.Optic.HideModel, weapon.RenderGroup)
-    self.hideModel:AddEffects(EF_BONEMERGE)
-    self.hideModel:AddEffects(EF_BONEMERGE_FASTCULL)
-    self.hideModel:AddEffects(EF_NOINTERP)
     self.hideModel:SetMoveType(MOVETYPE_NONE)
-    self.hideModel:SetParent(weapon.m_ViewModel)
     self.hideModel:SetNoDraw(true)
 end
 
@@ -36,8 +32,17 @@ function ATTACHMENT:OnRemove(weapon)
 end
 
 --https://github.com/Lexicality/stencil-tutorial/blob/master/lua/stencil_tutorial/06_cutting_holes_in_props.lua
-function ATTACHMENT:RenderReticle(weapon)
-    
+function ATTACHMENT:Render(weapon)
+    local bCanRemoveBodygroup = weapon:GetAimMode() == 0 && weapon:GetAimDelta() > 0.9
+    self.m_Model:SetBodygroup(
+        self.m_Model:FindBodygroupByName(self.Optic.LensBodygroup), 
+        bCanRemoveBodygroup && 0 || 1
+    )
+
+    if (weapon:GetAimMode() > 0 || weapon:GetAimDelta() < 0.9) then
+        self.m_Model:DrawModel()
+        return
+    end
 
 	render.SetStencilWriteMask(0xFF)
 	render.SetStencilTestMask(0xFF)
@@ -46,9 +51,17 @@ function ATTACHMENT:RenderReticle(weapon)
 	render.SetStencilZFailOperation(STENCIL_KEEP)
 	render.ClearStencil()
 	render.SetStencilEnable(true)
-	render.SetStencilReferenceValue(MWBASE_STENCIL_REFVALUE + 1)
+	render.SetStencilReferenceValue(MWBASE_STENCIL_REFVALUE + 2)
 	render.SetStencilCompareFunction(STENCIL_NEVER)
 	render.SetStencilFailOperation(STENCIL_REPLACE)
+
+    --dirty and quick way to make it work with velements and bonemerged
+    self.m_Model:SetupBones()
+    self.m_Model:InvalidateBoneCache()
+    local matrix = self.m_Model:GetBoneMatrix(0)
+
+    self.hideModel:SetPos(matrix:GetTranslation())
+    self.hideModel:SetAngles(matrix:GetAngles())
 
 	self.hideModel:DrawModel()
 
@@ -61,43 +74,11 @@ function ATTACHMENT:RenderReticle(weapon)
 
     ------------------------------
 
-    render.SetStencilWriteMask(0xFF)
-    render.SetStencilTestMask(0xFF)
-    render.SetStencilReferenceValue(0)
-    render.SetStencilCompareFunction(STENCIL_ALWAYS)
-    render.SetStencilPassOperation(STENCIL_REPLACE)
-    render.SetStencilFailOperation(STENCIL_KEEP)
-    render.SetStencilZFailOperation(STENCIL_KEEP)
-    render.SetStencilEnable(true)
-    render.SetStencilReferenceValue(MWBASE_STENCIL_REFVALUE + 2)
-
-    self.hideModel:DrawModel()
-
-    render.SetStencilCompareFunction(STENCIL_EQUAL)
-
-    local att = self.m_Model:GetAttachment(self.m_Model:LookupAttachment(self.Reticle.Attachment))
-    local pos, ang = att.Pos*1, att.Ang*1
-    ang:RotateAroundAxis(ang:Up(), 270)
-    ang:RotateAroundAxis(ang:Right(), 0)
-    ang:RotateAroundAxis(ang:Forward(), 90)
-
-    cam.Start3D2D(pos + ang:Up() * -100, ang, 0.01)
-        surface.SetMaterial(self.Reticle.Material)
-
-        local size = self.Reticle.Size 
-        local color = self.Reticle.Color
-
-        surface.SetDrawColor(color.r, color.g, color.b, color.a)
-        for i = 1, GetConVar("mgbase_fx_reticle_brightness"):GetInt(), 1 do
-            surface.DrawTexturedRect(size * -0.5, size * -0.5, size, size)
-        end
-    cam.End3D2D()
-
-    render.SetStencilEnable(false)
-    render.ClearStencil()
+    self:DoReticleStencil(self.hideModel, self.Reticle)
 
     ------------------------------
 
+    local att = self.m_Model:GetAttachment(self.m_Model:LookupAttachment(self.Reticle.Attachment))
     render.PushRenderTarget(self._RTTexture, 0, 0, 1024, 1024)
     cam.Start2D()
         render.Clear(0, 0, 0, 0)
