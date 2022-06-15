@@ -48,7 +48,8 @@ function SWEP:PostDrawViewModel(vm, weapon, ply)
     --weapon sounds
     self:AnimationEvents()
     
-    --reticles
+    --attachments
+    self:RenderLaser()
     self:RenderSight()
 
     --inspection
@@ -176,20 +177,16 @@ function SWEP:RenderSight()
         return
     end
 
-    if (self:GetSight().ReticleHybrid != nil && self:GetAimMode() <= 0) then
+    self:GetSight():Render(self)
+end
+
+function SWEP:RenderLaser()
+    if (self:GetLaser() == nil) then
         return
     end
 
-    local ret = self:GetSight().Reticle
-
-    if (self:GetSight().ReticleHybrid != nil) then
-        ret = self:GetSight().ReticleHybrid
-    end
-
-    local bRenderSightReticle = !GetConVar("mgbase_fx_cheap_reticles"):GetBool()
-
-    self:GetSight():Render(self)
-end
+    self:GetLaser():Render(self)
+end 
 
 local small = Vector(0, 0, 0)
 local normal = Vector(1, 1, 1)

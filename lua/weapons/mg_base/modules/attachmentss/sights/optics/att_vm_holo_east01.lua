@@ -8,8 +8,9 @@ ATTACHMENT.Bodygroups ={
     ["sight"] = 1
 }
 ATTACHMENT.AttachmentBodygroups ={
-    ["tag_sight"] = 1,
-    ["sight"] = 1
+    ["tag_sight"] = 2,
+    ["tag_rail"] = 1,
+    ["sight"] = 2
 }
 ATTACHMENT.Optic = {
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_holo_east_lens.vmt"),

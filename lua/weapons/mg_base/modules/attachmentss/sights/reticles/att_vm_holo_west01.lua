@@ -15,8 +15,9 @@ ATTACHMENT.Bodygroups ={
     ["sight"] = 1
 }
 ATTACHMENT.AttachmentBodygroups ={
-    ["tag_sight"] = 1,
-    ["sight"] = 1
+    ["tag_sight"] = 2,
+    ["tag_rail"] = 1,
+    ["sight"] = 2
 }
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)

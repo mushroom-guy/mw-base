@@ -8,6 +8,12 @@ ATTACHMENT.Bodygroups ={
     ["stock_hide"] = 1
     
 }
+ATTACHMENT.AttachmentBodygroups ={
+
+    ["tag_stock"] = 1,
+    ["stock_hide"] = 1
+    
+}
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)

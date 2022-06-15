@@ -497,6 +497,18 @@ volume =      0.5,
             "viper/shared/atmo/shotgun/weap_shotgun_fire_plr_atmo_int1_05.ogg",
             "viper/shared/atmo/shotgun/weap_shotgun_fire_plr_atmo_int1_06.ogg"}
 })
+sound.Add({
+    name =            "Atmo_ShotgunSUP.Inside",
+    channel =        CHAN_ATMO,
+    --level = 140,
+volume =      0.5,
+    sound = {"viper/shared/atmo/shotgun/weap_shotgun_sup_fire_plr_atmo_int1_01.ogg",
+            "viper/shared/atmo/shotgun/weap_shotgun_sup_fire_plr_atmo_int1_02.ogg",
+            "viper/shared/atmo/shotgun/weap_shotgun_sup_fire_plr_atmo_int1_03.ogg",
+            "viper/shared/atmo/shotgun/weap_shotgun_sup_fire_plr_atmo_int1_04.ogg",
+            "viper/shared/atmo/shotgun/weap_shotgun_sup_fire_plr_atmo_int1_05.ogg",
+            "viper/shared/atmo/shotgun/weap_shotgun_sup_fire_plr_atmo_int1_06.ogg"}
+})
 
 --- SMG ---
 sound.Add({
@@ -532,14 +544,14 @@ sound.Add({
     name =            "Reflection_AR.Outside",
     channel =        CHAN_REFLECTION,
     volume =      0.5,
-    sound = {"viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_01.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_02.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_03.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_04.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_05.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_06.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_07.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_dist_lr_08.ogg"}
+    sound = {"viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_01.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_02.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_03.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_04.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_05.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_06.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_07.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_ar_urb_ext_close_front_08.ogg"}
 })
 sound.Add({
     name =            "Reflection_AR.Inside",
@@ -559,14 +571,14 @@ sound.Add({
     name =            "Reflection_ARSUP.Outside",
     channel =        CHAN_REFLECTION,
 volume =      0.5,
-    sound = {"viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_01.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_02.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_03.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_04.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_05.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_06.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_07.ogg",
-            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_dist_lr_08.ogg"}
+    sound = {"viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_01.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_02.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_03.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_04.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_05.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_06.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_07.ogg",
+            "viper/shared/reflection/ar/weap_refl_ar_urb/weap_refl_arsup_urb_ext_close_front_08.ogg"}
 })
 sound.Add({
     name =            "Reflection_ARSUP.Inside",
@@ -586,12 +598,12 @@ sound.Add({
     name =            "Reflection_Pistol.Outside",
     channel =        CHAN_REFLECTION,
 volume =      0.5,
-    sound = {"viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_dist_lr_01.ogg",
-            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_dist_lr_02.ogg",
-            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_dist_lr_03.ogg",
-            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_dist_lr_04.ogg",
-            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_dist_lr_05.ogg",
-            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_dist_lr_06.ogg"}
+    sound = {"viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_close_front_01.ogg",
+            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_close_front_02.ogg",
+            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_close_front_03.ogg",
+            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_close_front_04.ogg",
+            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_close_front_05.ogg",
+            "viper/shared/reflection/pistol/weap_pist_ref_urb/weap_refl_pistol_urb_ext_close_front_06.ogg"}
 })
 sound.Add({
     name =            "Reflection_Pistol.Inside",
@@ -610,15 +622,15 @@ volume =      0.5,
 sound.Add({
     name =            "Reflection_Shotgun.Outside",
     channel =        CHAN_REFLECTION,
-volume =      0.5,
-    sound = {"viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_01.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_02.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_03.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_04.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_05.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_06.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_07.ogg",
-            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_dist_lr_08.ogg"}
+    volume =      0.5,
+    sound = {"viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_01.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_02.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_03.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_04.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_05.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_06.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_07.ogg",
+            "viper/shared/reflection/shotgun/weap_refl_shotgun_urb/weap_refl_shotgun_urb_ext_close_front_08.ogg"}
 })
 sound.Add({
     name =            "Reflection_Shotgun.Inside",

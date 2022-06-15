@@ -20,22 +20,12 @@ function ATTACHMENT:DoReticleStencil(model, ret)
     render.SetStencilCompareFunction(STENCIL_EQUAL)
 
     local att = self.m_Model:GetAttachment(self.m_Model:LookupAttachment(ret.Attachment))
-    local pos, ang = att.Pos, att.Ang
-    ang:RotateAroundAxis(ang:Up(), 270)
-    ang:RotateAroundAxis(ang:Right(), 0)
-    ang:RotateAroundAxis(ang:Forward(), 90)
-
-    cam.Start3D2D(pos + ang:Up() * -100, ang, 0.01)
-        surface.SetMaterial(ret.Material)
-
-        local size = ret.Size 
-        local color = ret.Color
-
-        surface.SetDrawColor(color.r, color.g, color.b, color.a)
-        for i = 1, GetConVar("mgbase_fx_reticle_brightness"):GetInt(), 1 do
-            surface.DrawTexturedRect(size * -0.5, size * -0.5, size, size)
-        end
-    cam.End3D2D()
+    local size = ret.Size 
+    local color = ret.Color
+    render.SetMaterial(ret.Material)
+    --i don't know which one is faster, but the second one has a roll option
+    --render.DrawSprite(att.Pos + att.Ang:Forward() * 100, size * 0.01, size * 0.01, color)
+    render.DrawQuadEasy(att.Pos + att.Ang:Forward() * 100, att.Ang:Forward():GetNegated(), size * 0.01, size * 0.01, color, -att.Ang.r + 180)
 
     render.SetStencilEnable(false)
     render.ClearStencil()

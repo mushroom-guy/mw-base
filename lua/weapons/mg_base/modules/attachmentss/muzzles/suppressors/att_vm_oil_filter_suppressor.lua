@@ -7,3 +7,8 @@ ATTACHMENT.AttachmentBodygroups = {
     ["tag_tip"] = 1,
     ["tip"] = 1
 }
+local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+function ATTACHMENT:Stats(weapon)
+    BaseClass.Stats(self, weapon)
+    weapon:doSuppressorStats()
+end 

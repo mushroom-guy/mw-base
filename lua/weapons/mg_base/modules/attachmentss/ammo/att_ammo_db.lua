@@ -16,8 +16,12 @@ function ATTACHMENT:OnImpact(weapon, dmgInfo, tr)
     dmgInfo:SetDamageType(dmgInfo:GetDamageType() + DMG_BURN + DMG_SLOWBURN)
 end
 
+function ATTACHMENT:Stats(weapon)
+    BaseClass.Stats(self, weapon)
+    weapon:doDBStats()
+end
+
 function ATTACHMENT:PostProcess(weapon)
     BaseClass.PostProcess(self, weapon)
-
     weapon.Projectile = nil
 end

@@ -10,6 +10,7 @@ ATTACHMENT.Bodygroups ={
 }
 ATTACHMENT.AttachmentBodygroups ={
     ["tag_sight"] = 2,
+    ["tag_rail"] = 1,
     ["sight"] = 2
 }
 ATTACHMENT.Optic = {
@@ -17,12 +18,12 @@ ATTACHMENT.Optic = {
     HideModel = Model("models/viper/mw/attachments/weapon_vm_scope_mike14_alt_lens_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 3, 
-    ParallaxSize = 600, --a value of zero means 1:1 size with the end of the optic
+    ParallaxSize = 700, --a value of zero means 1:1 size with the end of the optic
     Thermal = false
 }
 ATTACHMENT.Reticle = {
     Material = Material("viper/mw/reticles/reticle_int_default.vmt"),
-    Size = 500,
+    Size = 1000,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
@@ -35,5 +36,5 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.9
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.9
     weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.65
-    weapon.Zoom.FovMultiplier = 0.25
+    weapon.Zoom.FovMultiplier = 0.125
 end

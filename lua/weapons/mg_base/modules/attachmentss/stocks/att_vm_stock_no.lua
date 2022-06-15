@@ -8,3 +8,9 @@ ATTACHMENT.Bodygroups ={
     ["stock_hide"] = 1
     
 }
+ATTACHMENT.AttachmentBodygroups ={
+
+    ["tag_stock"] = 1,
+    ["stock_hide"] = 1
+    
+}

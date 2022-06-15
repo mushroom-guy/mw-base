@@ -9,6 +9,7 @@ ATTACHMENT.Bodygroups ={
 }
 ATTACHMENT.AttachmentBodygroups ={
     ["tag_sight"] = 2,
+    ["tag_rail"] = 1,
     ["sight"] = 2
 }
 ATTACHMENT.Optic = {
@@ -16,7 +17,7 @@ ATTACHMENT.Optic = {
     HideModel = Model("models/viper/mw/attachments/attachment_vm_4x_east_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 7, 
-    ParallaxSize = 0, --a value of zero means 1:1 size with the end of the optic
+    ParallaxSize = 500, --a value of zero means 1:1 size with the end of the optic
     Thermal = false
 }
 ATTACHMENT.Reticle = {
@@ -31,6 +32,6 @@ function ATTACHMENT:Stats(weapon)
     
     weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.94
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.94
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.8
-    weapon.Zoom.FovMultiplier = 0.65
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.05
+    weapon.Zoom.FovMultiplier = 0.525
 end

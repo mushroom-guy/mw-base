@@ -207,7 +207,7 @@ function SWEP:CreateAttachmentForUse(attachmentClass)
         end
     end
 
-    if (slot == nil) then
+    if (slot == nil) then 
         error("Weapon does not have an attachment of type "..(attachmentClass || "none").."!")
         return
     end
@@ -216,34 +216,26 @@ function SWEP:CreateAttachmentForUse(attachmentClass)
 
     if (oldAtt != nil && oldAtt.ClassName == attachmentClass) then
         return
+    end 
+
+    if (oldAtt != nil) then --it could be nil if we are customizing for the first time (just spawned)
+        oldAtt:OnRemove(self)
     end
 
-    if (CLIENT) then
-        if (oldAtt != nil) then --it could be nil if we are customizing for the first time (just spawned)
-            oldAtt:OnRemove(self)
-            if (IsValid(oldAtt.m_Model)) then
-                if (oldAtt.m_Model.mw_flashlightProjTexture != nil) then
-                    oldAtt.m_Model.mw_flashlightProjTexture:Remove()
-                end
-                
-                if (oldAtt.m_Model.mw_flashlightParticle != nil) then
-                    oldAtt.m_Model.mw_flashlightParticle:StopEmissionAndDestroyImmediately()
-                end
-                
-                oldAtt.m_Model:Remove()
-            end
-        
-            if (IsValid(oldAtt.m_TpModel)) then
-                if (oldAtt.m_TpModel.mw_flashlightProjTexture != nil) then
-                    oldAtt.m_TpModel.mw_flashlightProjTexture:Remove()
-                end
-                
-                if (oldAtt.m_TpModel.mw_flashlightParticle != nil) then
-                    oldAtt.m_TpModel.mw_flashlightParticle:StopEmissionAndDestroyImmediately()
-                end
-                
-                oldAtt.m_TpModel:Remove()
-            end
+    --reload the attachment for developer
+    if (GetConVar("sv_cheats"):GetInt() > 0 && GetConVar("developer"):GetInt() > 0) then
+        local currentClass = attachmentClass
+        while (currentClass != nil) do
+            local folder = MW_ATTS[currentClass].Folder
+            MW_ATTS[currentClass] = nil
+            LoadAttachment(folder, currentClass..".lua") --mw_loader
+            currentClass = MW_ATTS[currentClass].Base
+        end
+
+        currentClass = attachmentClass
+        while (currentClass != nil) do
+            DoAttachmentInheritance(MW_ATTS[currentClass]) --mw_loader
+            currentClass = MW_ATTS[currentClass].Base
         end
     end
 
@@ -634,11 +626,13 @@ function SWEP:PlayViewModelAnimation(seqIndex, compensate, cycle)
         local dur = self.m_ViewModel:SequenceDuration()
         
         --lag compensation
+        local baseCycle = self.Animations[seqIndex].StartCycle || 0
+
         if (compensate && !game.SinglePlayer()) then
             local rate = math.min(LocalPlayer():Ping() / (dur * 1000), 1)
-            self.m_ViewModel:SetCycle(rate)
+            self.m_ViewModel:SetCycle(baseCycle + rate)
         else
-            self.m_ViewModel:SetCycle(cycle)
+            self.m_ViewModel:SetCycle(cycle == 0 && baseCycle || cycle)
         end
 
         self.m_ViewModel:SetPlaybackRate(self.Animations[seqIndex].Fps / 30)

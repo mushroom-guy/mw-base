@@ -52,5 +52,8 @@ function SWEP:DrawWorldModelTranslucent(flags)
     self.m_ViewModel:FrameAdvance()
     self:AnimationEvents()
 
-    self:RenderModels(self.m_WorldModel, 0)
+    self:RenderModels(self.m_WorldModel)
+    
+    --attachments
+    self:RenderLaser()
 end

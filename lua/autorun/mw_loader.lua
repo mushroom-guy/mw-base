@@ -1,6 +1,3 @@
-print("Init MW Loader\n")
-print("With sv_cheats and developer convars set to 1, you can reload attachments every time you customize your gun")
-
 local function IncludeDir(dir) 
     dir = dir .. "/"
     local File, Directory = file.Find(dir.."*", "LUA")
@@ -15,7 +12,7 @@ local function IncludeDir(dir)
         IncludeDir(dir..v)
     end  
 end 
-
+ 
 CHAN_ATMO = 137
 CHAN_REFLECTION = 138
 CHAN_CASINGS = 139
@@ -72,33 +69,38 @@ loadRigs("weapons/mg_base/modules/rigs")
 
 --load attachments
 MW_ATTS = {}
- 
+  
 function GetAttachmentBaseClass(base)
     MW_ATTS[base] = MW_ATTS[base] || {}
 
     return MW_ATTS[base]
 end
 
+function LoadAttachment(path, fileName)
+    ATTACHMENT = {} 
+             
+    AddCSLuaFile(path..fileName)
+    include(path..fileName) 
+    
+    local name = string.Replace(fileName, ".lua", "")
+    ATTACHMENT.ClassName = name
+    ATTACHMENT.Folder = path
+    
+    table.Merge(GetAttachmentBaseClass(name), table.Copy(ATTACHMENT))
+end
+
 local oldModel = Model  
 function Model(dir) --sorry 
     return dir     
 end    
-    
+     
 local function loadAttachments(dir) 
     dir = dir .. "/"    
     local File, Directory = file.Find(dir.."*", "LUA")
     for k, v in ipairs(File) do
         if string.EndsWith(v, ".lua") then   
-            ATTACHMENT = {} 
-             
-            local name = string.Replace(v, ".lua", "")
-            
-            AddCSLuaFile(dir..v)
-            include(dir..v)
-             
-            ATTACHMENT.ClassName = name
-            table.Merge(GetAttachmentBaseClass(name), table.Copy(ATTACHMENT))
-        end 
+            LoadAttachment(dir, v)
+        end  
     end
      
     for k, v in ipairs(Directory) do
@@ -133,14 +135,14 @@ local function checkBaseClassInAttachments()
 end
 checkBaseClassInAttachments()
 
---inherit
+--inherit 
 local function inherit(current, base)
     for k, v in pairs(base) do
-        if (!istable(v)) then
-            if (current[k] == nil) then
-                current[k] = v
+        if (!istable(v)) then 
+            if (current[k] == nil) then 
+                current[k] = v 
             end
-        else
+        else 
             if (current[k] == nil) then
                 current[k] = {}
             end
@@ -149,13 +151,17 @@ local function inherit(current, base)
     end
 end
 
+function DoAttachmentInheritance(att)
+    local baseClass = MW_ATTS[att.Base]
+    while (baseClass != nil) do
+        inherit(att, baseClass)
+        baseClass = MW_ATTS[baseClass.Base]
+    end 
+end
+
 local function finishAttachments()
     for name, att in pairs(MW_ATTS) do
-        local baseClass = MW_ATTS[att.Base]
-        while (baseClass != nil) do
-            inherit(att, baseClass)
-            baseClass = MW_ATTS[baseClass.Base]
-        end
+        DoAttachmentInheritance(att)
     end
 end
 finishAttachments()

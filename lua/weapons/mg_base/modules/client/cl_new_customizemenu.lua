@@ -30,6 +30,7 @@ local buttonGlowMaterial = Material("mg/buttonglow")
 local customizeMenuOpenMaterial = Material("mg/customizemenuopen")
 local removeAttachmentMaterial = Material("mg/removeattachment")
 local closeAttachmentsMaterial = Material("mg/closeattachments")
+local cursorGlowMaterial = Material("mg/cursorglow")
 
 local blackColor = Color(0, 0, 0, 150)
 local whiteColor = Color(255, 255, 255, 200)
@@ -44,7 +45,7 @@ local redColor = Color(230, 0, 30, 255)
 hook.Add("OnContextMenuOpen", "MW_ContextMenu", function()
     if (input.LookupBinding("mgbase_customize", false) == nil) then
         RunConsoleCommand("mgbase_customize")
-    end
+    end 
 end)
 
 local function closeCustomizationMenu()
@@ -132,6 +133,10 @@ local function openStatsInfo(panel, attachment, weapon)
             local statPanel = vgui.Create("DPanel")
             statPanel:SetSize(statsGrid:GetColWide(), statsGrid:GetRowHeight())
             function statPanel:Paint(w, h)
+                if (!validWeapon(weapon)) then
+                    return
+                end
+
                 local statInfo = weapon.StatInfo[statInfo]
                 draw.SimpleText(statInfo.Name, "mgbase_statName", 10, h * 0.5, whiteColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
 
@@ -169,12 +174,14 @@ local function closeStatsInfo(panel)
 end
 
 local function openCategoryList(categoryName, weapon, buttonFrom)
-    local background = vgui.Create("DFrame", MW_CUSTOMIZEMENU)
+    local background = vgui.Create("DButton", MW_CUSTOMIZEMENU)
     background:SetPos(0, 0)
     background:SetSize(ScrW(), ScrH())
-    background:ShowCloseButton(false) 
-    background:SetDraggable(false)
+    background:SetText("")
+    --background:ShowCloseButton(false) 
+    --background:SetDraggable(false)
     background:Center()
+    background:SetCursor("arrow")
 
     function background:Think()
         if (GetViewEntity():KeyDown(IN_USE)) then
@@ -184,6 +191,15 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
 
     function background:Paint(width, height)
         Derma_DrawBackgroundBlur(self, self.m_fCreateTime)
+
+        surface.SetDrawColor(whiteColor.r, whiteColor.g, whiteColor.b, 3)
+        surface.SetMaterial(cursorGlowMaterial)
+        surface.DrawTexturedRect(gui.MouseX() - 175, gui.MouseY() - 175, 350, 350)
+    end
+
+    function background:DoClick()
+        surface.PlaySound(closeAttachmentsSound)
+        self:Remove()
     end
 
     local atts = {}
@@ -297,6 +313,10 @@ local function openCategoryList(categoryName, weapon, buttonFrom)
         but.IsAllowed = true
 
         function but:Think()
+            if (!validWeapon(weapon)) then
+                return
+            end
+
             self.IsAllowed = weapon:IsAttachmentAllowed(attachment)
         end
 
@@ -447,6 +467,7 @@ local function openCustomizationMenu(weapon)
     function MW_CUSTOMIZEMENU:Think()
         if (!validWeapon(weapon)) then
             closeCustomizationMenu()
+            self:Remove() --why do i need this
         end
     end
 

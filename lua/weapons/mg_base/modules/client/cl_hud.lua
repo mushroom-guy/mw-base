@@ -119,7 +119,7 @@ end
 
 function SWEP:HUDShouldDraw(name)
 	if (self:IsCustomizing()) then
-		return name != "CHudAmmo" && name != "CHudBattery" && name != "CHudHealth" && name != "CHudSecondaryAmmo" && name != "CHudSuitPower" && name != "CHUDQuickInfo"
+		return false
 	end
 
 	if (self:GetIsAiming() && name == "CHUDQuickInfo") then

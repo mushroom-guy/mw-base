@@ -16,3 +16,8 @@ function ATTACHMENT:Stats(weapon)
         Gravity = 2
     }
 end 
+
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
+    weapon.Primary.TrailingSound = nil
+end 

@@ -8,6 +8,7 @@ ATTACHMENT.Bodygroups ={
 }
 ATTACHMENT.AttachmentBodygroups ={
     ["tag_sight"] = 2,
+    ["tag_rail"] = 1,
     ["sight"] = 2
 }
 ATTACHMENT.Optic = {

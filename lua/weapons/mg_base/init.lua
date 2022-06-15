@@ -44,11 +44,6 @@ net.Receive("mgbase_customize", function(len, ply)
     if (!GetConVar("mgbase_sv_customization"):GetBool()) then
         return
     end
-    
-    if (GetConVar("sv_cheats"):GetInt() > 0 && GetConVar("developer"):GetInt() > 0 && !weapon:GetIsCustomizing()) then
-        include("autorun/mw_loader.lua")
-        ply:SendLua("include('autorun/mw_loader.lua')")
-    end
 
     if (IsValid(ply:GetActiveWeapon())) then
         if (!weapons.IsBasedOn(weapon:GetClass(), "mg_base")) then return end

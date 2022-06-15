@@ -21,4 +21,5 @@ function ATTACHMENT:PostProcess(weapon)
     BaseClass.PostProcess(self, weapon)
 
     weapon.Projectile = nil
+    weapon.Primary.TrailingSound = nil
 end 

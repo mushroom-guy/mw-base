@@ -10,4 +10,13 @@ end
 function ATTACHMENT:Init(weapon)
 end
 function ATTACHMENT:OnRemove(weapon)
+    if (CLIENT) then
+        if (IsValid(self.m_Model)) then
+            self.m_Model:Remove()
+        end
+
+        if (IsValid(self.m_TpModel)) then
+            self.m_TpModel:Remove()
+        end
+    end
 end
