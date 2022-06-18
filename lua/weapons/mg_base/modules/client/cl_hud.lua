@@ -262,6 +262,19 @@ local function CreateFonts()
 		blursize  = 2
 	})
 
+	surface.CreateFont("mgbase_utilityButton", {
+		font = "BioSansW05-Light",
+		size = 32,
+		weight = 0
+	})
+
+	surface.CreateFont("mgbase_utilityButton:hover", {
+		font = "BioSansW05-Light",
+		size = 32,
+		weight = 0,
+		blursize = 1
+	})
+
 	surface.CreateFont("mgbase_attSlotMenu", {
 		font = "Conduit ITC",
 		size = 24,

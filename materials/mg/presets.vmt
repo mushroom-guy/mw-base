@@ -1,8 +1,8 @@
 "UnlitGeneric"
 {
-	"$basetexture" "mg/clear"
+	"$basetexture" "mg/presets"
 	"$nolod" 1
 	"$vertexalpha" 1
 	"$vertexcolor" 1
-	//"$translucent" "1"
+	"$translucent" "1"
 }

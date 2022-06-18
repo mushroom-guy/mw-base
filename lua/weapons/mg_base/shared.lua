@@ -12,6 +12,11 @@ function clearBaseClass(t)
 end
 
 function SWEP:GetStoredAttachment(ind)
+    if (istable(ind)) then
+        PrintTable(ind)
+        error("Something went wrong when loading an attachment! Probably still using old customization method (read above for info).")
+    end
+
     if (MW_ATTS[ind] == nil) then
         error("Attachment "..(ind != nil && ind || "none").." is missing!")
     end
