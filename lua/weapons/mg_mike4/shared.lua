@@ -13,7 +13,7 @@ if CLIENT then
 end
 
 SWEP.Base = "mg_base"
-SWEP.GripPoseParameters = {"grip_gripvert_offset", "grip_barshort_gripang_offset", "grip_barshort_gripvert_offset", "grip_gripang_offset", "grip_barlong_gripvert_offset", "grip_barlong_gripang_offset", "grip_m203_offset", "grip_m203_gripvert_offset", "grip_m203_gripang_offset"}
+SWEP.GripPoseParameters = {"grip_gripvert_offset", "grip_gripvertpro_offset", "grip_barshort_gripang_offset", "grip_barshort_gripvert_offset", "grip_gripang_offset", "grip_barlong_gripvert_offset", "grip_barlong_gripang_offset", "grip_m203_offset", "grip_m203_gripvert_offset", "grip_m203_gripang_offset"}
 
 SWEP.PrintName = "M4A1"
 SWEP.Category = "Modern Warfare"
@@ -124,8 +124,8 @@ SWEP.Bullet = {
 }
 
 SWEP.Zoom = {
-    FovMultiplier = 0.9,
-    ViewModelFovMultiplier = 0.8,
+    FovMultiplier = 0.95,
+    ViewModelFovMultiplier = 1,
     Blur = {
         EyeFocusDistance = 6.5
     }
@@ -133,8 +133,8 @@ SWEP.Zoom = {
 
 SWEP.WorldModelOffsets = {
     Bone = "tag_sling",
-    Angles = Angle(-5,0,0),
-    Pos = Vector(0,0,0)
+    Angles = Angle(0, 95, -90),
+    Pos = Vector(3,-5,-3.5)
 }
 
 SWEP.ViewModelOffsets = {
@@ -158,9 +158,9 @@ SWEP.ViewModelOffsets = {
         }
     },
     
-    RecoilMultiplier = 1.35,
-    KickMultiplier = 0.93,
-    AimKickMultiplier = 0.2
+    RecoilMultiplier = 0.4,
+    KickMultiplier = 1,
+    AimKickMultiplier = 1
 }
 
 SWEP.Shell = {

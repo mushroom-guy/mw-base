@@ -5,7 +5,12 @@ ATTACHMENT.AttachmentBodygroups ={
 }
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-    weapon:SetGripPoseParameter("grip_vert_offset")
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
 end
+
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
+    weapon:SetGripPoseParameter("grip_vert_offset")
+
+end 

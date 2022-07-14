@@ -18,5 +18,11 @@ function ATTACHMENT:Stats(weapon)
     weapon.Recoil.Vertical[1] =  weapon.Recoil.Vertical[1] * 0.93
     weapon.Recoil.Vertical[2] =  weapon.Recoil.Vertical[2] * 0.93
     weapon.HoldType = "RifleWithVerticalGrip"
-    weapon:SetGripPoseParameter("grip_vert_offset")
+    weapon.PrintName = "PM.md 63"
 end
+
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
+    weapon:SetGripPoseParameter("grip_vert_offset")
+
+end 

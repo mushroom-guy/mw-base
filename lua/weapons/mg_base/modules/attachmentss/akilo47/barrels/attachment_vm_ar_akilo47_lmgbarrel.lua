@@ -11,4 +11,5 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.91
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.91
     weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.91
+    weapon.PrintName = "RPK"
 end

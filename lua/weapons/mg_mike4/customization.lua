@@ -24,6 +24,8 @@ function SWEP:doSocomConversionStats()
     local bSup2 = self:HasAttachment("attachment_vm_silencer02")
     local bSup3 = self:HasAttachment("attachment_vm_silencer03")
     local bSup4 = self:HasAttachment("attachment_vm_silencer04")
+    local bSup4 = self:HasAttachment("attachment_vm_silencer05")
+    local bSup4 = self:HasAttachment("attachment_vm_silencer06")
     local bSup5 = self:HasAttachment("attachment_vm_ar_mike4_barsil")
     local bSup6 = self:HasAttachment("attachment_vm_ar_mike4_mag_v5")
     local bSup6 = self:HasAttachment("attachment_vm_ar_mike4_barrel_v7")
@@ -85,30 +87,30 @@ end
 SWEP.Customization = {
     {"att_perk", "attachment_vm_ar_mike4_perk_soh", "att_perk_fmj"}, 
 
-    {"attachment_vm_ar_mike4_barrel", "attachment_vm_ar_mike4_barrel_v2", "attachment_vm_ar_mike4_barrel_v15", "attachment_vm_ar_mike4_barrel_v7", 
+    {"attachment_vm_ar_mike4_barrel", "attachment_vm_ar_mike4_barrel_v2", "attachment_vm_ar_mike4_barrel_v27","attachment_vm_ar_mike4_barrel_v15", "attachment_vm_ar_mike4_barrel_v7", 
     "attachment_vm_ar_mike4_barrel_v3_alt", "attachment_vm_ar_mike4_barsil", "attachment_vm_ar_mike4_custombarrel",
     "attachment_vm_ar_mike4_mike203barrel", "attachment_vm_ar_mike4_shortbarrel"},
 
-    {"attachment_vm_ar_mike4_stock", "attachment_vm_ar_mike4_stock_v2", "attachment_vm_ar_mike4_stock_v15","attachment_vm_ar_mike4_customstock", "attachment_vm_ar_mike4_stockno", "att_vm_stock_heavy01", 
+    {"attachment_vm_ar_mike4_stock", "attachment_vm_ar_mike4_stock_v2", "attachment_vm_ar_mike4_stock_v27", "attachment_vm_ar_mike4_stock_v15","attachment_vm_ar_mike4_customstock", "attachment_vm_ar_mike4_stockno", "att_vm_stock_heavy01", 
     "att_vm_stock_heavy02", "att_vm_stock_light01", "att_vm_stock_medium01"},
 
-    {"attachment_vm_ar_mike4_mag", "attachment_vm_ar_mike4_xmags", "attachment_vm_ar_mike4_xmags2", "attachment_vm_ar_mike4_mag_v5", 
+    {"attachment_vm_ar_mike4_mag", "attachment_vm_ar_mike4_mag_v15", "attachment_vm_ar_mike4_mag_v27", "attachment_vm_ar_mike4_xmags", "attachment_vm_ar_mike4_xmags2", "attachment_vm_ar_mike4_mag_v5", 
     "attachment_vm_ar_mike4_calsmg"},
 
-    {"att_receiver", "attachment_vm_ar_mike4_receiver_v7", "attachment_vm_ar_mike4_receiver_v2", "attachment_vm_ar_mike4_receiver_v15"},
+    {"attachment_vm_ar_mike4_receiver", "attachment_vm_ar_mike4_receiver_v7", "attachment_vm_ar_mike4_receiver_v27", "attachment_vm_ar_mike4_receiver_v2", "attachment_vm_ar_mike4_receiver_v15"},
 
     {"att_muzzle", "att_vm_breacher01", "att_vm_breacher02", "att_vm_compensator01", 
     "att_vm_compensator02", "att_vm_flashhider01", "att_vm_flashhider02", 
     "att_vm_flashhider03", "att_vm_flashhider04", "att_vm_muzzlebrake01",
     "att_vm_muzzlebrake02", "att_vm_muzzlebrake03",
     "att_vm_silencer01", "att_vm_silencer02", "att_vm_silencer03",
-    "att_vm_silencer04"},
+    "att_vm_silencer04", "att_vm_silencer05", "att_vm_silencer06"},
 
     {"att_sight", "attachment_vm_ar_mike4_carryhandle", "att_vm_minireddot01_tall", "att_vm_minireddot02_tall", "att_vm_minireddot03_tall",
     "att_vm_holo_west01", "att_vm_holo_west02", "att_vm_holo_east01", "att_vm_reflex_east01",
     "att_vm_reflex_east02_tall", "att_vm_reflex_west02_tall", "att_vm_reflex_west03",
     "att_vm_thermal_east01", "att_vm_thermal_west01", "att_vm_thermal_east01_hybrid",
-    "att_vm_hybrid_west01", "att_vm_hybrid_west02", "att_vm_hybrid_west02_thermal", 
+    "att_vm_hybrid_west01", "att_vm_hybrid_west02", "att_vm_hybrid_west02_thermal", "att_vm_reflex_west04", "att_vm_2x_west01",
     "att_vm_hybrid_west03", "att_vm_4x_east01_tall",
     "att_vm_4x_west01_tall", "att_vm_4x_west02_tall",
     "att_vm_scope_mike14", "att_vm_scope_vz"},

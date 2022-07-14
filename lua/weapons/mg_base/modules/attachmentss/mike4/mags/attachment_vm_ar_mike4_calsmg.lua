@@ -25,4 +25,5 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 1.1
     weapon.Cone.Increase =  weapon.Cone.Increase * 0.5
     weapon:doCalConversionStats()
+    weapon.PrintName = "Colt 9mm SMG"
 end

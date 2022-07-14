@@ -18,4 +18,14 @@ function ATTACHMENT:Stats(weapon)
     weapon.Recoil.Horizontal[2] = weapon.Recoil.Horizontal[2] * 0.8
     weapon.Primary.ClipSize = 30
     weapon.Primary.RPM = 690
+    weapon.PrintName = "AK-74"
+
+    if (weapon:HasAttachment("attachment_vm_ar_akilo47_smgbarrel") || weapon:HasAttachment("attachment_vm_ar_akilo47_smgbarcust")) then 
+        weapon.PrintName = "AKS-74U"
+    end
+
+    if (weapon:HasAttachment("attachment_vm_ar_akilo47_custombarrel")) then 
+        weapon.PrintName = "AK-12"
+    end
+
 end

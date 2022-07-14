@@ -14,4 +14,7 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 1.12
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 1.12
     weapon.Recoil.AdsMultiplier = weapon.Recoil.AdsMultiplier * 1.75
+    if (weapon:HasAttachment("attachment_vm_ar_scharlie_barrel_pdw")) then 
+        weapon.PrintName = "FN SCAR-SC"
+    end
 end

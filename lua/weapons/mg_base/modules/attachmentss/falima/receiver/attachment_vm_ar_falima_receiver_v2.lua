@@ -8,3 +8,8 @@ ATTACHMENT.Bodygroups={
 }
 ATTACHMENT.UIColor = CUSTOMIZATION_COLOR_RARE
 ATTACHMENT.CosmeticChange = true
+local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+function ATTACHMENT:Stats(weapon)
+    BaseClass.Stats(self, weapon)
+    weapon.PrintName = "DSA SA58"
+end

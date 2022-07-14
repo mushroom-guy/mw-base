@@ -14,5 +14,9 @@ function ATTACHMENT:Stats(weapon)
     weapon.Cone.Hip = weapon.Cone.Hip * 0.95
     weapon:doSuppressorStats()
     weapon.ParticleEffects.MuzzleFlash = "AC_muzzle_pistol_suppressed"
+end
+
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
     weapon:SetGripPoseParameter("grip_barshort_offset")
 end

@@ -12,4 +12,5 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 1.15
     weapon.Bullet.EffectiveRange = weapon.Bullet.EffectiveRange * 0.9
     weapon.Bullet.DropOffStartRange = weapon.Bullet.DropOffStartRange * 0.9
+    weapon.PrintName = "MK18 Mod 0"
 end

@@ -15,3 +15,10 @@ function ATTACHMENT:Stats(weapon)
     weapon:doSuppressorStats()
     weapon.ParticleEffects.MuzzleFlash = "AC_muzzle_pistol_suppressed"
 end
+
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
+    if(!weapon:HasAttachment("attachment_vm_ar_kilo433_drum_mag")) then
+        weapon:SetGripPoseParameter("grip_queer_offset")
+    end
+end

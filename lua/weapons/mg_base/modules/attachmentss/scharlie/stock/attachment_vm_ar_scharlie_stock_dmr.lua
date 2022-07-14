@@ -16,4 +16,7 @@ function ATTACHMENT:Stats(weapon)
     weapon.Recoil.Vertical[2] = weapon.Recoil.Vertical[2] * 0.9
     weapon.Recoil.Horizontal[1] = weapon.Recoil.Horizontal[1] * 0.9
     weapon.Recoil.Horizontal[2] = weapon.Recoil.Horizontal[2] * 0.9
+    if (weapon:HasAttachment("attachment_vm_ar_scharlie_barrel_long")) then 
+        weapon.PrintName = "FN SSR"
+    end
 end

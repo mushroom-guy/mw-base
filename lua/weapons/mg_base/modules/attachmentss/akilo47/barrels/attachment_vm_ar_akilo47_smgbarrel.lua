@@ -12,5 +12,10 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 1.1
     weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 1.1
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 1.1
-    weapon:SetGripPoseParameter("grip_smg_pose_offset")
+
 end
+
+function ATTACHMENT:PostProcess(weapon)
+    BaseClass.PostProcess(self, weapon)
+    weapon:SetGripPoseParameter("grip_smg_pose_offset")
+end 

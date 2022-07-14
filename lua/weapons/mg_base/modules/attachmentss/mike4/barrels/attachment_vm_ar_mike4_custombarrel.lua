@@ -11,4 +11,5 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.94
     weapon.Bullet.EffectiveRange = weapon.Bullet.EffectiveRange * 1.1
     weapon.Bullet.DropOffStartRange = weapon.Bullet.DropOffStartRange * 1.1
+    weapon.PrintName = "M16A4"
 end

@@ -3,7 +3,7 @@ ATTACHMENT.Name = "FORGE TAC Ballast Pack"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/falima/attachment_vm_ar_falima_stockl.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/falima/icon_attachment_ar_falima_stockl.vmt")
 ATTACHMENT.Bodygroups ={
-    ["tag_stock"] = 1
+    ["tag_stock"] = 0
 }
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
