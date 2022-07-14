@@ -185,4 +185,5 @@ function SWEP:CreateAndResumeReverbJob()
 	if (yield != nil) then
 		self.LastReverbState = yield
 	end
+	--self.LastReverbState = true
 end

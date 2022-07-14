@@ -147,6 +147,10 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
         damage = damage * GetConVar("mgbase_sv_pvedamage"):GetFloat()
     end
 
+    if (tr.HitGroup == HITGROUP_HEAD) then
+        damage = damage * (self.Bullet.HeadshotMultiplier || 1)
+    end
+
     dmgInfo:SetDamage(damage + 1)
     
     if (tr.Entity == self.lastHitEntity && (tr.Entity:IsPlayer() || tr.Entity:IsNPC())) then --if we are penetrating something again (bad coz we apply double damage this way)
@@ -280,9 +284,9 @@ function SWEP:Bullets(hitpos)
         Spread = spread,
         Num = self.Bullet.NumBullets,
         Damage = self.Bullet.Damage[1], --for some fucking bullet mod or something idk
-        HullSize = self:GetAimDelta() > 0.5 && 1 || 0,
+        HullSize = (self:GetAimDelta() > 0.5 && self:GetOwner():GetInfoNum("mgbase_aimassist", 1) > 0 && GetConVar("mgbase_sv_aimassist"):GetInt() > 0) && 1 || 0,
         --Force = (self.Bullet.Damage[1] * self.Bullet.PhysicsMultiplier) * 0.01,
-        Distance = self:MetersToHU(self.Bullet.Range),
+        Distance = self:MetersToHU(self.Bullet.Range) * GetConVar("mgbase_sv_range"):GetFloat(),
         Tracer = self.Bullet.Tracer && 1 || 0,
         Callback = function(attacker, tr, dmgInfo)
             self:BulletCallback(attacker, tr, dmgInfo, bFromServer)
@@ -400,10 +404,10 @@ function SWEP:Projectiles()
     local dir = self:GetOwner():GetEyeTraceNoCursor().HitPos - src 
     
     math.randomseed(self:Clip1() + self:Ammo1() + CurTime() + self.Cone.Seed)
-    local spreadRight = math.random(-self:GetCone(), self:GetCone())
+    local spreadRight = math.Rand(-self:GetCone(), self:GetCone()) * 5
 
     math.randomseed(-self:Clip1() * 0.5 + self:Ammo1() * 2 - CurTime() + self.Cone.Seed)
-    local spreadUp = math.random(-self:GetCone(), self:GetCone())
+    local spreadUp = math.Rand(-self:GetCone(), self:GetCone()) * 5
 
     local spread = LerpVector(self:GetAimDelta(), Vector(spreadRight, spreadUp), Vector(0, 0))
     angles:RotateAroundAxis(angles:Right(), spread.x)

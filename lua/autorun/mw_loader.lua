@@ -1,3 +1,5 @@
+CreateConVar("mgbase_precacheatts", "0", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Attachments limit.", 0, 1)
+
 local function IncludeDir(dir) 
     dir = dir .. "/"
     local File, Directory = file.Find(dir.."*", "LUA")
@@ -5,22 +7,22 @@ local function IncludeDir(dir)
         if string.EndsWith(v, ".lua") then 
             AddCSLuaFile(dir..v)
             include(dir..v) 
-        end  
+        end   
     end
     
-    for k, v in ipairs(Directory) do
-        IncludeDir(dir..v)
-    end  
-end 
- 
-CHAN_ATMO = 137
+    for k, v in ipairs(Directory) do 
+        IncludeDir(dir..v)   
+    end    
+end      
+     
+CHAN_ATMO = 137 
 CHAN_REFLECTION = 138
-CHAN_CASINGS = 139
-CHAN_TRIGGER = 140
-CHAN_MINIGUNFIRE = 141
+CHAN_CASINGS = 139 
+CHAN_TRIGGER = 140  
+CHAN_MINIGUNFIRE = 141 
 CHAN_MAGAZINEDROP = 142
 CHAN_WPNFOLEY = 143
-
+ 
 
 CUSTOMIZATION_COLOR_COMMON = Color(0, 220, 30, 255)
 CUSTOMIZATION_COLOR_LEGENDARY = Color(255, 175, 0, 255)
@@ -91,6 +93,9 @@ end
 
 local oldModel = Model  
 function Model(dir) --sorry 
+    if (GetConVar("mgbase_precacheatts"):GetInt() > 0) then
+        util.PrecacheModel(dir)
+    end
     return dir     
 end    
      
@@ -224,15 +229,15 @@ loadPresets("weapons/mg_base/modules/presets")
 
 if (CLIENT) then 
     local function loadPresetsFromData(dir)
-        dir = dir .. "/"
+        dir = dir .. "/"  
         local File, Directory = file.Find(dir.."*", "DATA")
         for k, v in ipairs(File) do
-            if (string.EndsWith(v, ".json")) then 
-                local name = string.Replace(v, ".json", "")
+            if (string.EndsWith(v, ".json")) then  
+                local name = string.Replace(v, ".json", "") 
                 local preset = util.JSONToTable(file.Read(dir..v))
 
                 if (preset == nil || table.IsEmpty(preset)) then
-                    continue
+                    continue 
                 end 
 
                 if (preset.Name == nil || preset.SWEP == nil || preset.Attachments == nil) then

@@ -53,7 +53,7 @@ function ENT:PhysicsUpdate(phys)
 			start = self.LastPos,
 			endpos = phys:GetPos(),
 			filter = {self:GetOwner(), self},
-			mask = MASK_SHOT,
+			mask = MASK_SHOT_PORTAL,
 			collisiongroup = COLLISION_GROUP_PROJECTILE,
 			mins = -self.Maxs,
 			maxs = self.Maxs

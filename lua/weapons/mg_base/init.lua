@@ -84,7 +84,7 @@ net.Receive("mgbase_customize_att", function(len, ply)
     end
 end)
 
---[[hook.Add("Think", "sajfoiadsf", function()
+hook.Add("Think", "sajfoiadsf", function()
     for _, p in pairs(player.GetAll()) do
         if (!p:IsBot()) then
             continue
@@ -96,4 +96,4 @@ end)
 
         p:SetPos(p.targetPracticePos)
     end 
-end)]]
+end)

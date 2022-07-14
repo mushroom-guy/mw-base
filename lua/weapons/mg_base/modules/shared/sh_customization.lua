@@ -168,7 +168,7 @@ function SWEP:CreateAttachmentModel(attachment)
                 reticleData = attachment.m_Model:GetAttachment(attachment.m_Model:LookupAttachment(attachment.ReticleHybrid.Attachment))
 
                 localPos, localAng = WorldToLocal(reticleData.Pos, reticleData.Ang, data.Pos, data.Ang)
-                attachment.HybridAimPos = Vector(localPos.y, localPos.x, -localPos.z) 
+                attachment.HybridAimPos = Vector(localPos.y, -localPos.x + 2, -localPos.z) 
                 attachment.HybridAimAng = Angle(localAng.p, localAng.y, -localAng.r)
                 --this was just trial and error tbh
             end
@@ -293,6 +293,10 @@ function SWEP:BuildCustomizedGun()
         att:PostProcess(self)
     end
     
+    for slot, att in pairs(self:GetAllAttachmentsInUse()) do
+        self:PostAttachment(att) --letting all atts do their thing and then run ours
+    end
+
     --check magazine:
     if (IsValid(self:GetOwner())) then
         local maxClip = self:GetMaxClip1WithChamber()
@@ -355,8 +359,44 @@ function SWEP:MakeBreadcrumbsForAttachment(attachment)
         attachment:Stats(breadcrumbs) --run stats (lol he doesnt know its actually not a gun!!)
 
         --make bcs
+        local holder = {}
+        self:MakeBreadcrumbs(holder, weapons.Get(self:GetClass()), breadcrumbs) --looks at differences in numbers only
+
         attachment.Breadcrumbs = {}
-        self:MakeBreadcrumbs(attachment.Breadcrumbs, weapons.Get(self:GetClass()), breadcrumbs) --looks at differences in numbers only
+
+        for statInfo, crumb in pairs(holder) do
+            crumb.statInfo = statInfo
+            table.insert(attachment.Breadcrumbs, crumb)
+        end
+
+        local sort = function(a, b) 
+            local aStat = self.StatInfo[a.statInfo]
+            local bStat = self.StatInfo[b.statInfo]
+
+            local baPositive = a.Current <= a.Original
+                    
+            if (aStat.ProIfMore) then
+                baPositive = !baPositive
+            end
+            
+            local bbPositive = b.Current <= b.Original
+                    
+            if (bStat.ProIfMore) then
+                bbPositive = !bbPositive
+            end
+
+            if (baPositive && !bbPositive) then
+                return true
+            elseif (!baPositive && bbPositive) then
+                return false
+            elseif ((baPositive && bbPositive) || (!baPositive && !bbPositive)) then
+                local aName = aStat.Name
+                local bName = bStat.Name
+
+                return aName <= bName
+            end
+        end
+        table.sort(attachment.Breadcrumbs, sort)
     end
 end
 

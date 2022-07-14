@@ -1,6 +1,6 @@
-ATTACHMENT.Base = "att_hybrid"
+ATTACHMENT.Base = "att_optic"
 ATTACHMENT.Name = "Merc Thermal Optic"
-ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_east_tall.mdl")
+ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_east.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_thermal_east.vmt")
 ATTACHMENT.Bodygroups ={
     ["tag_sight"] = 2,
@@ -13,6 +13,7 @@ ATTACHMENT.AttachmentBodygroups ={
     ["sight"] = 2
 }
 ATTACHMENT.Optic = {
+    HideModel = Model("models/viper/mw/attachments/attachment_vm_thermal_east_hide.mdl"),
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_thermal_east_lens.vmt"),
     LensBodygroup = "lens",
     FOV = 7, 

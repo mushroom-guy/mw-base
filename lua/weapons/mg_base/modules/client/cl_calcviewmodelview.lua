@@ -68,6 +68,8 @@ function SWEP:CalcViewModel(ViewModel, EyePos, EyeAng)
 
     --viewpunch
     local vpAngles = self:GetOwner():GetViewPunchAngles()
+    vpAngles.y = 0
+    vpAngles.r = 0
     vpAngles:Mul(self:SafeLerp(self:GetAimDelta(), 0.2, 0.01))
 
     EyeAng:Add(vpAngles)
@@ -330,7 +332,81 @@ function SWEP:CalcCrouchOffset()
     return self.ZeroVector
 end
 
+
+local function decayRecoil(target, lerp, vel, springConstant, wobbleConstant)
+    local currentToTarget = target
+    currentToTarget:Sub(lerp)
+    currentToTarget.y = currentToTarget.y * springConstant * 0.5
+    currentToTarget.x = currentToTarget.x * springConstant * 0.5
+    currentToTarget.z = currentToTarget.z * springConstant * 0.5
+
+    local sqrt = math.sqrt(springConstant)
+    local dampingForce = -vel * (wobbleConstant)
+    dampingForce.y = dampingForce.y * (sqrt * 2)
+    dampingForce.x = dampingForce.x * sqrt
+    dampingForce.z = dampingForce.z * sqrt
+
+    local force = currentToTarget + (dampingForce)
+
+    vel:Add(force * math.min(FrameTime(), 0.01))
+    lerp:Add(vel * math.min(FrameTime(), 0.01))
+end
+
+SWEP.m_RecoilVelocity = Vector()
+SWEP.m_RecoilLerp = Vector()
+SWEP.m_RecoilAngVelocity = Vector()
+SWEP.m_RecoilAngLerp = Vector()
+
+SWEP.m_RecoilAimVelocity = Vector()
+SWEP.m_RecoilAimLerp = Vector()
+SWEP.m_RecoilAimAngVelocity = Vector()
+SWEP.m_RecoilAimAngLerp = Vector()
+
 function SWEP:CalcRecoil()
+    if (!self.Primary.Automatic) then
+        self.ViewModelVars.Recoil.Rotation:Zero()
+        self.ViewModelVars.Recoil.Translation:Zero()
+        return
+    end
+
+    local target = VectorRand() * (math.Clamp(self:GetSprayRounds(), 0, 5) * Lerp(self:GetAimDelta(), 0.5, 1))
+    target.y = -math.Clamp(self:GetSprayRounds(), 0, 2)
+
+    if (self:GetAimDelta() <= 0.5) then
+        decayRecoil(target, self.m_RecoilLerp, self.m_RecoilVelocity, 350, 0.9)
+        decayRecoil(target, self.m_RecoilAngLerp, self.m_RecoilAngVelocity, 60, 0.8)
+        
+        if (self:GetSprayRounds() <= 0) then
+            self.m_RecoilAimLerp:Zero()
+            self.m_RecoilAimAngLerp:Zero()
+            self.m_RecoilAimAngVelocity:Zero()
+            self.m_RecoilAimVelocity:Zero()
+        end
+    else
+        decayRecoil(target, self.m_RecoilAimLerp, self.m_RecoilAimVelocity, 150, 1.9)
+        decayRecoil(target, self.m_RecoilAimAngLerp, self.m_RecoilAimAngVelocity, 300, 1.2)
+
+        if (self:GetSprayRounds() <= 0) then
+            self.m_RecoilLerp:Zero()
+            self.m_RecoilAngLerp:Zero()
+            self.m_RecoilAngVelocity:Zero()
+            self.m_RecoilVelocity:Zero()
+        end
+    end
+
+    local aimLerp = Lerp(self:GetAimDelta(), 1, 0.1) * (self.Recoil.ViewModelMultiplier || 1)
+
+    self.ViewModelVars.Recoil.Translation = LerpVector(self:GetAimDelta(), self.m_RecoilLerp, self.m_RecoilAimLerp) * aimLerp
+
+    aimLerp = Lerp(self:GetAimDelta(), 1, 0.025) * (self.Recoil.ViewModelMultiplier || 1)
+
+    self.ViewModelVars.Recoil.Rotation = LerpAngle(self:GetAimDelta(), 
+        Angle(self.m_RecoilAngLerp.z, self.m_RecoilAngLerp.x, self.m_RecoilAngLerp.z * 0.5), 
+        Angle(self.m_RecoilAimAngLerp.z, self.m_RecoilAimAngLerp.x, self.m_RecoilAimAngLerp.z * 0.5)
+    ) * 0.1 * aimLerp
+end
+
+--[[function SWEP:CalcRecoil()
     local aimDelta = self:SafeLerp(self:GetAimDelta(), 0.75, 0.2)
 
     if (self.Primary.Automatic) then
@@ -369,6 +445,4 @@ function SWEP:CalcRecoil()
             self.ViewModelVars.Recoil.Rotation = LerpAngle(math.min(10 * FrameTime(), 1), self.ViewModelVars.Recoil.Rotation, self.ZeroAngle)
         end
     end 
-
-    --haha :).
-end
+end]]

@@ -43,6 +43,7 @@ local removeAttachmentMaterial = Material("mg/removeattachment")
 local closeAttachmentsMaterial = Material("mg/closeattachments")
 local cursorGlowMaterial = Material("mg/cursorglow")
 local presetsMaterial = Material("mg/presets")
+local defaultPresetMaterial = Material("mg/defaultpreset")
 local addPresetMaterial = Material("mg/addpreset")
 local resetMaterial = Material("mg/clear")
 local randomMaterial = Material("mg/random")
@@ -170,7 +171,7 @@ local function makePopupMenu()
     return background
 end
 
-local function createPresetPanel(text)
+local function createPresetPanel(preset)
     --panel to hold button
     local presetPanel = vgui.Create("DPanel")
     function presetPanel:Paint(w, h)
@@ -185,68 +186,72 @@ local function createPresetPanel(text)
     but.bWasHovered = false
     
     function but:IsAllowed()
-        --[[for _, attachmentClass in pairs(preset.Attachments) do
-        if (!weapon:HasAttachment(attachmentClass)) then
-            return true
+        return true
+    end
+
+    function but:Paint(width, height)
+        if (self:IsHovered()) then
+            self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * RealFrameTime(), 0.1))
+            
+            if (!self.bWasHovered) then
+                surface.PlaySound(hoverAttachmentSounds[math.random(1, #hoverAttachmentSounds)])
+            end
+            
+            self.bWasHovered = true
+        else
+            self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * RealFrameTime(), 0.1))
+            self.bWasHovered = false
+        end
+        
+        if (self:IsDown()) then
+            self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * RealFrameTime(), 0.1))
+        else
+            self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * RealFrameTime(), 0.1))
+        end
+        
+        local bAllowed = self:IsAllowed()
+        local currentColor = bAllowed && blackColor || backgroundErrorColor
+        
+        --background
+        surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a)
+        self:DrawFilledRect()
+        
+        currentColor = bAllowed && whiteColor || errorColor
+        
+        --click hold
+        surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a * 0.15 * self.ClickDelta)
+        self:DrawFilledRect()
+        
+        --border hover
+        surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a * self.HoverDelta)
+        self:DrawOutlinedRect()
+        
+        --glow hover
+        surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a * 0.15 * (self.HoverDelta - self.ClickDelta))
+        surface.SetMaterial(buttonGlowMaterial)
+        surface.DrawTexturedRect(0, height * 0.5, width, height * 0.5)
+        
+        --preset name
+
+        if (preset == nil) then
+            return
+        end
+
+        local hoverColor = Color(currentColor.r, currentColor.g, currentColor.b, currentColor.a * self.HoverDelta)
+        draw.SimpleText(preset.Name, "mgbase_attSlotAttachmentInUse:hover", width * 0.5 - 2, height * 0.5, hoverColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(preset.Name, "mgbase_attSlotAttachmentInUse", width * 0.5 - 2, height * 0.5, currentColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, shadowColor)
+
+        if (!preset._bUserGenerated) then
+            surface.SetDrawColor(255, 255, 255, Lerp(self.HoverDelta, 15, 100))
+            surface.SetMaterial(defaultPresetMaterial)
+            surface.DrawTexturedRect(width * 0.5 - 25, height * 0.5 - 20, 50, 40)
         end
     end
-    
-    return false]]
-    return true --no same net messages are sent anymore
-end
 
-function but:Paint(width, height)
-    if (self:IsHovered()) then
-        self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * RealFrameTime(), 0.1))
-        
-        if (!self.bWasHovered) then
-            surface.PlaySound(hoverAttachmentSounds[math.random(1, #hoverAttachmentSounds)])
-        end
-        
-        self.bWasHovered = true
-    else
-        self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * RealFrameTime(), 0.1))
-        self.bWasHovered = false
+    function but:PaintOver(width, height)
     end
-    
-    if (self:IsDown()) then
-        self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * RealFrameTime(), 0.1))
-    else
-        self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * RealFrameTime(), 0.1))
-    end
-    
-    local bAllowed = self:IsAllowed()
-    local currentColor = bAllowed && blackColor || backgroundErrorColor
-    
-    --background
-    surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a)
-    self:DrawFilledRect()
-    
-    currentColor = bAllowed && whiteColor || errorColor
-    
-    --click hold
-    surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a * 0.15 * self.ClickDelta)
-    self:DrawFilledRect()
-    
-    --border hover
-    surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a * self.HoverDelta)
-    self:DrawOutlinedRect()
-    
-    --glow hover
-    surface.SetDrawColor(currentColor.r, currentColor.g, currentColor.b, currentColor.a * 0.15 * (self.HoverDelta - self.ClickDelta))
-    surface.SetMaterial(buttonGlowMaterial)
-    surface.DrawTexturedRect(0, height * 0.5, width, height * 0.5)
-    
-    --preset name
-    local hoverColor = Color(currentColor.r, currentColor.g, currentColor.b, currentColor.a * self.HoverDelta)
-    draw.SimpleText(text, "mgbase_attSlotAttachmentInUse:hover", width * 0.5 - 2, height * 0.5, hoverColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    draw.SimpleText(text, "mgbase_attSlotAttachmentInUse", width * 0.5 - 2, height * 0.5, currentColor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, shadowColor)
-end
 
-function but:PaintOver(width, height)
-end
-
-return presetPanel, but
+    return presetPanel, but
 end
 
 local function openPresetsMenu(weapon)
@@ -259,10 +264,30 @@ local function openPresetsMenu(weapon)
             presets[#presets + 1] = table.Copy(preset)
         end
     end
+
+    table.sort(presets, function(a, b)
+        if (!a._bUserGenerated) then
+            return true
+        end
+
+        if (!b._bUserGenerated) then
+            return false
+        end
+
+        if (a.Name < b.Name) then
+            return true
+        end
+
+        if (a.Name > b.Name) then
+            return false
+        end
+
+        return false
+    end)
     
     local menu = vgui.Create("DPanel", background)
     menu:SetSize(400, ScrH() * 0.6)
-    menu:Center()
+    menu:Center() 
     
     local x,y = menu:GetPos()
     menu:SetPos(x, ScrH())
@@ -283,7 +308,7 @@ local function openPresetsMenu(weapon)
     makeCloseButton(headerPanel, background)
     
     --ADD PRESET
-    local addPresetPanel, addBut = createPresetPanel("")
+    local addPresetPanel, addBut = createPresetPanel(nil)
     addPresetPanel:SetParent(menu)
     addPresetPanel:SetSize(0, 80)
     addPresetPanel:SetPos(20, 40)
@@ -398,9 +423,9 @@ local function openPresetsMenu(weapon)
     presetsGrid:SetRowHeight(80)
     presetsGrid:Dock(FILL)
     presetsGrid:DockMargin(20, 0, 0, 0)
-    
-    for _, preset in SortedPairsByMemberValue(presets, "Name") do
-        local presetPanel, but = createPresetPanel(preset.Name)
+     
+    for _, preset in pairs(presets) do
+        local presetPanel, but = createPresetPanel(preset)
         presetPanel:SetSize(presetsGrid:GetColWide() * 0.9, presetsGrid:GetRowHeight())
         function but:DoRightClick()
             if (preset._bUserGenerated) then
@@ -449,10 +474,11 @@ local function openStatsInfo(panel, attachment, weapon)
     end
     
     local count = table.Count(attachment.Breadcrumbs)
+    
     if (attachment.Breadcrumbs == nil || count <= 0) then
         return
     end
-    
+
     if (!IsValid(panel.hover)) then
         panel.hover = vgui.Create("DPanel")
         panel.hover.parent = panel
@@ -504,7 +530,7 @@ local function openStatsInfo(panel, attachment, weapon)
         statsGrid:SetRowHeight(50)
         statsGrid:Dock(FILL)
         
-        for statInfo, crumb in SortedPairs(attachment.Breadcrumbs) do
+        for i, crumb in pairs(attachment.Breadcrumbs) do
             local statPanel = vgui.Create("DPanel")
             statPanel:SetSize(statsGrid:GetColWide(), statsGrid:GetRowHeight())
             function statPanel:Paint(w, h)
@@ -512,7 +538,7 @@ local function openStatsInfo(panel, attachment, weapon)
                     return
                 end
                 
-                local statInfo = weapon.StatInfo[statInfo]
+                local statInfo = weapon.StatInfo[crumb.statInfo]
                 draw.SimpleText(statInfo.Name, "mgbase_statName", 10, h * 0.5, whiteColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
                 
                 local bPositive = crumb.Current < crumb.Original

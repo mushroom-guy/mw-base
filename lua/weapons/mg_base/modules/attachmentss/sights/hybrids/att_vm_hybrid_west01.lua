@@ -13,7 +13,8 @@ ATTACHMENT.AttachmentBodygroups ={
     ["sight"] = 2
 }
 ATTACHMENT.Optic = {
-    LensHideMaterial = Material("viper/MW/attachments/attachment_vm_hybrid_west_lens_scope.vmt"),
+    LensHideMaterial = Material("viper/MW/attachments/reticle_ui_stencil.vmt"),
+    HideModel = Model("models/viper/mw/attachments/attachment_vm_hybrid_west_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 7, 
     ParallaxSize = 600, --a value of zero means 1:1 size with the end of the optic

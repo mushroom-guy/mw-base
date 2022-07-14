@@ -7,24 +7,29 @@ ATTACHMENT.Bodygroups ={
     ["tag_rail"] = 1,
     ["sight"] = 2
 }
+
 ATTACHMENT.AttachmentBodygroups ={
     ["tag_sight"] = 2,
     ["tag_rail"] = 1,
     ["sight"] = 2
 }
+
 ATTACHMENT.Optic = {
-    LensHideMaterial = Material("viper/MW/attachments/attachment_vm_hybrid_west02_magnifier_lens.vmt"),
+    LensHideMaterial = Material("viper/MW/attachments/reticle_ui_stencil.vmt"),
+    HideModel =  Model("models/viper/mw/attachments/attachment_vm_hybrid_west02_hide.mdl"),
     LensBodygroup = "lens",
     FOV = 7, 
     ParallaxSize = 600, --a value of zero means 1:1 size with the end of the optic
     Thermal = false
 }
+
 ATTACHMENT.Reticle = {
     Material = Material("viper/shared/reticles/eotech_reticle"),
     Size = 250,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
+
 ATTACHMENT.ReticleHybrid = {
     Material = Material("viper/shared/reticles/eotech_reticle"),
     Size = 250,
@@ -33,6 +38,7 @@ ATTACHMENT.ReticleHybrid = {
     OffAnimation = "HybridOff",
     Attachment = "reticle2"
 }
+
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)

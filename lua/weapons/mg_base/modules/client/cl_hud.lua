@@ -89,7 +89,7 @@ function SWEP:DrawCommands()
 
 		x,y = ScrW() * 0.5, ScrH() * 0.7
 
-		if (self:GetSight() != nil && self:GetSight().Optic != nil && self:GetAimModeDelta() <= self.m_hybridSwitchThreshold && !self:GetOwner():KeyDown(IN_SPEED)) then
+		if (self:GetSight() != nil && self:GetSight().Optic != nil && self:GetAimModeDelta() <= self.m_hybridSwitchThreshold && !self:GetOwner():KeyDown(IN_SPEED) && GetConVar("mgbase_sv_breathing"):GetInt() > 0) then
 			local w = self:DrawBinding(x, y, "+speed")
 			draw.SimpleTextOutlined("HOLD BREATH", "mgbase_commandSecondary", x, y + (30 * scale), Color(255, 255, 255, 200), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 2, Color(0, 0, 0, 20))
 		end

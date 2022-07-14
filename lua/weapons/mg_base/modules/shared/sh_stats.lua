@@ -14,6 +14,7 @@ SWEP.StatDefinitions = {
    -- ["SWEP.Animations.Reload_Empty.Length"] = "ReloadLength", --too confusing for people
     ["SWEP.Animations.Reload.Fps"] = "ReloadSpeed",
     ["SWEP.Animations.Reload_Empty.Fps"] = "ReloadSpeed",
+    ["SWEP.Animations.Reload_Start.Fps"] = "ReloadSpeed",
     ["SWEP.Animations.Draw.Fps"] = "SwitchSpeed",
     ["SWEP.Animations.Holster.Fps"] = "SwitchSpeed",
     ["SWEP.Bullet.Damage.1"] = "DamageClose",

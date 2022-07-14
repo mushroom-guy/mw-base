@@ -3,9 +3,9 @@ ATTACHMENT.Name = "APX5 Holographic Sight"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_holo_east.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_holo_east.vmt")
 ATTACHMENT.Bodygroups ={
-    ["tag_sight"] = 1,
+    ["tag_sight"] = 2,
     ["tag_rail"] = 1,
-    ["sight"] = 1
+    ["sight"] = 2
 }
 ATTACHMENT.AttachmentBodygroups ={
     ["tag_sight"] = 2,

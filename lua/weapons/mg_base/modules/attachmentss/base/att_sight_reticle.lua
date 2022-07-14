@@ -1,10 +1,15 @@
 ATTACHMENT.Base = "att_sight"
 
 function ATTACHMENT:Render(weapon)
-    self:DoReticleStencil(self.m_Model, self.Reticle)
+    self:DoReticleStencil(self.m_Model, self.Reticle, weapon)
 end
 
-function ATTACHMENT:DoReticleStencil(model, ret)
+function ATTACHMENT:DoReticleStencil(model, ret, weapon)
+    if (weapon != nil && weapon.DrawHUD == nil) then
+        model:DrawModel()
+        return
+    end
+
     render.SetStencilWriteMask(0xFF)
     render.SetStencilTestMask(0xFF)
     render.SetStencilReferenceValue(0)
@@ -25,7 +30,15 @@ function ATTACHMENT:DoReticleStencil(model, ret)
     render.SetMaterial(ret.Material)
     --i don't know which one is faster, but the second one has a roll option
     --render.DrawSprite(att.Pos + att.Ang:Forward() * 100, size * 0.01, size * 0.01, color)
-    render.DrawQuadEasy(att.Pos + att.Ang:Forward() * 100, att.Ang:Forward():GetNegated(), size * 0.01, size * 0.01, color, -att.Ang.r + 180)
+
+    local offset = att.Ang:Forward() * 100
+    
+    if (ret.Offset != nil) then
+        offset = offset + att.Ang:Right() * ret.Offset.x
+        offset = offset + att.Ang:Up() * ret.Offset.y
+    end
+
+    render.DrawQuadEasy(att.Pos + offset, att.Ang:Forward():GetNegated(), size * 0.01, size * 0.01, color, -att.Ang.r + 180)
 
     render.SetStencilEnable(false)
     render.ClearStencil()

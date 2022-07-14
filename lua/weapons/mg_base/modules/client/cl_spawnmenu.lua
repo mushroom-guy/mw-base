@@ -201,18 +201,9 @@ hook.Add("PopulateToolMenu", "CustomMenuSettings", function()
 		
 		panel:CheckBox("Barrel Smoke", "mgbase_fx_smoke")
 		panel:ControlHelp("Toggle overheat smoke coming from the barrels.")
-		
-		--panel:CheckBox("Cheap Reticles", "mgbase_fx_cheap_reticles")
-		--panel:ControlHelp("Reticles stop rendering when not aiming.")
-		
+
 		panel:CheckBox("View Blur FX", "mgbase_fx_blur")
 		panel:ControlHelp("Toggle DOF blur when reloading/customizing.")
-		
-		--[[panel:CheckBox("View Model Blur FX", "mgbase_fx_vmblur")
-		panel:ControlHelp("Toggle DOF blur on the view model.")
-		
-		panel:CheckBox("View Model Blur FX (Hip)", "mgbase_fx_vmblur_hip")
-		panel:ControlHelp("Toggle DOF blur on the view model when firing from the hip.")]]
 	end)
 	
 	spawnmenu.AddToolMenuOption("Options", "mw_options", "mw_hud", "HUD", "", "", function(panel)
@@ -271,11 +262,14 @@ hook.Add("PopulateToolMenu", "CustomMenuSettings", function()
 		panel:AddItem(binder)
 		panel:ControlHelp("Once this is set, the menu won't show up when pressing the context menu key!")]] --doesn't work lol
 		
-		panel:CheckBox("Attachments Saving", "mgbase_saveatts")
-		panel:ControlHelp("Toggle whether or not to keep attachments after death.")
+		--panel:CheckBox("Attachments Saving", "mgbase_saveatts")
+		--panel:ControlHelp("Toggle whether or not to keep attachments after death.")
 		
-		panel:NumSlider("Scope ADS Sensitivity", "mgbase_scopesens", 0.01, 10, 2)
-		panel:ControlHelp("Set the aim sensitivity when using scopes.")
+		--panel:NumSlider("Scope ADS Sensitivity", "mgbase_scopesens", 0.01, 10, 2)
+		--panel:ControlHelp("Set the aim sensitivity when using scopes.")
+
+		panel:CheckBox("Aim Assist", "mgbase_aimassist")
+		panel:ControlHelp("Enable aim assist.")
 	end)
 	
 	spawnmenu.AddToolMenuOption("Options", "mw_options", "mw_debug", "Debug", "", "", function(panel)
@@ -323,9 +317,7 @@ hook.Add("PopulateToolMenu", "CustomMenuSettings", function()
 			panel:ControlHelp("shoo")
 			return
 		end
-		
-		panel:ControlHelp("Alternate hitreg has been integrated into the base.")
-		
+
 		panel:NumSlider("PvP Damage Multiplier", "mgbase_sv_pvpdamage", 0, 5, 1)
 		panel:ControlHelp("Change damage towards players.")
 		
@@ -337,6 +329,15 @@ hook.Add("PopulateToolMenu", "CustomMenuSettings", function()
 		
 		panel:NumSlider("Accuracy Multiplier", "mgbase_sv_accuracy", 0.1, 5, 1)
 		panel:ControlHelp("Change accuracy intensity.")
+
+		panel:NumSlider("Range Multiplier", "mgbase_sv_range", 1, 10, 1)
+		panel:ControlHelp("Change range limit.")
+
+		panel:CheckBox("Aim Assist", "mgbase_sv_aimassist")
+		panel:ControlHelp("Allow aim assist.")
+
+		panel:CheckBox("Scope Breathing/Sway", "mgbase_sv_breathing")
+		panel:ControlHelp("Allow scopes to sway aim.")
 		
 		panel:CheckBox("Toggle Customization", "mgbase_sv_customization")
 		panel:ControlHelp("Allow gun customization.")

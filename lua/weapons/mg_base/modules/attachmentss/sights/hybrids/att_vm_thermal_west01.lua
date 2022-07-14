@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_hybrid"
+ATTACHMENT.Base = "att_optic"
 ATTACHMENT.Name = "Solozero NVG Enhanced"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_west_01.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_thermal_west01.vmt")
@@ -13,6 +13,7 @@ ATTACHMENT.AttachmentBodygroups ={
     ["sight"] = 2
 }
 ATTACHMENT.Optic = {
+    HideModel = Model("models/viper/mw/attachments/attachment_vm_thermal_west_01_hide.mdl"),
     LensHideMaterial = Material("viper/MW/attachments/attachment_vm_thermal_west01_lens.vmt"),
     LensBodygroup = "lens",
     FOV = 7, 
@@ -21,7 +22,7 @@ ATTACHMENT.Optic = {
 }
 ATTACHMENT.Reticle = {
     Material = Material("viper/mw/reticles/reticle_thermal_default.vmt"),
-    Size = 550,
+    Size = 750,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }

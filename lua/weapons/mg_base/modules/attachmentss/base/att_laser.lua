@@ -17,6 +17,10 @@ local function removeFlashlightStuffFromModel(flashModel)
 end
 
 function ATTACHMENT:DoLaserRender(weapon, laserModel)
+    if (weapon.DrawHUD == nil) then
+        return
+    end
+
     local att = laserModel:GetAttachment(laserModel:LookupAttachment(self.Laser.Attachment))
     local tr = util.TraceLine({
         start = att.Pos + att.Ang:Forward() * -10,
@@ -78,6 +82,11 @@ function ATTACHMENT:DoLaserRender(weapon, laserModel)
 end
 
 function ATTACHMENT:DrawFlashlight(weapon, model)
+    if (weapon.DrawHUD == nil) then
+        removeFlashlightStuffFromModel(model)
+        return
+    end
+
     if (self.Flashlight == nil) then
         return
     end

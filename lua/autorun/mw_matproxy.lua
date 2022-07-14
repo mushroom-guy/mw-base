@@ -51,7 +51,7 @@ matproxy.Add( {
 	end,
 
 	bind = function(self, mat, ent)
-		if (!IsValid(ent)) then return end
+		--[[if (!IsValid(ent)) then return end
 
 		mat:SetInt("$detailblendmode", 0)
 		mat:SetFloat("$detailblendfactor", 0)
@@ -60,7 +60,7 @@ matproxy.Add( {
 
 		mat:SetInt("$detailblendmode", 4)
 		mat:SetFloat("$detailblendfactor", 1)
-		mat:SetTexture("$detail",  ent.mw_Camo)
+		mat:SetTexture("$detail",  ent.mw_Camo)]]
 	end
 })
 

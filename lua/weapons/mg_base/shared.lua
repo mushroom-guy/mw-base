@@ -24,7 +24,7 @@ function SWEP:GetStoredAttachment(ind)
     return MW_ATTS[ind]
 end
  
-SWEP.Category = "MG"
+SWEP.Category = "MG" 
 SWEP.Spawnable = false
 SWEP.AdminOnly = false
 SWEP.PrintName = "Base Weapon"
@@ -111,12 +111,19 @@ PrecacheParticleSystem("flashlight_mw19")
 CreateConVar("mgbase_sv_pvpdamage", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "PvP damage multiplier", 0, 5)
 CreateConVar("mgbase_sv_pvedamage", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "PvE damage multiplier", 0, 5)
 CreateConVar("mgbase_sv_recoil", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Recoil multiplier", 0, 5)
+CreateConVar("mgbase_sv_range", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Range multiplier", 0, 10)
 CreateConVar("mgbase_sv_accuracy", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Accuracy multiplier", 0.01, 5)
 CreateConVar("mgbase_sv_customization", "1", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED, "Allow gun customization.", 0, 1)
 CreateConVar("mgbase_sv_customization_limit", "0", FCVAR_ARCHIVE + FCVAR_NOTIFY + FCVAR_REPLICATED, "Attachments limit.", 0)
+CreateConVar("mgbase_sv_aimassist", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Attachments limit.", 0, 1)
+CreateConVar("mgbase_sv_breathing", "1", FCVAR_ARCHIVE + FCVAR_REPLICATED, "Scope breathing.", 0, 1)
 CreateConVar("mgbase_debug_reverb", "0", FCVAR_REPLICATED, "Show reverb.", 0, 1)
 CreateConVar("mgbase_debug_range", "0", FCVAR_REPLICATED, "Show range at hit location.", 0, 1)
 CreateConVar("mgbase_debug_projectiles", "0", FCVAR_REPLICATED, "Show projectiles info.", 0, 1)
+
+function SWEP:PostAttachment(attachment)
+    --do stuff on the gun
+end
 
 function SWEP:LookupBoneCached(model, name)
     if (model.cachedBones == nil) then
@@ -621,6 +628,9 @@ function SWEP:PlayViewModelAnimation(seqIndex, compensate, cycle)
         if (!IsValid(self.m_ViewModel)) then
             return
         end
+
+        --self:EnableGrip()
+        --self:EnableGrip2()
         
         local anims = self.Animations[seqIndex].Sequences
 

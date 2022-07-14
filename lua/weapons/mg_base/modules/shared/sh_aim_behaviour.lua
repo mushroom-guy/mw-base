@@ -86,6 +86,26 @@ function SWEP:CanChangeAimMode()
 end
 
 function SWEP:AimModeModule()
+    if (self:GetAimMode() > 0) then
+        local len = self:GetAnimLength("Ads_In") * 0.5
+
+        if (self:GetSight() != nil && self:GetSight().ReticleHybrid != nil && self:GetSight().ReticleHybrid.OnAnimation != nil) then
+            len = self:GetAnimLength(self:GetSight().ReticleHybrid.OnAnimation)
+        end
+
+        local speed = 1 / len;
+        self:SetAimModeDelta(math.min(self:GetAimModeDelta() + speed * FrameTime(), 1))
+    else
+        local len = self:GetAnimLength("Ads_Out") * 0.5
+
+        if (self:GetSight() != nil && self:GetSight().ReticleHybrid != nil && self:GetSight().ReticleHybrid.OffAnimation != nil) then
+            len = self:GetAnimLength(self:GetSight().ReticleHybrid.OffAnimation)
+        end
+
+        local speed = 1 / len;
+        self:SetAimModeDelta(math.max(self:GetAimModeDelta() - speed * FrameTime(), 0))
+    end
+    
     if (!self:GetIsAiming()) then
         return
     end
@@ -130,30 +150,10 @@ function SWEP:AimModeModule()
     if (CurTime() >= self:GetNextAimModeTime()) then
         self:SetAimModeUsePressed(false)
     end
-
-    if (self:GetAimMode() > 0) then
-        local len = self:GetAnimLength("Ads_In") * 0.5
-
-        if (self:GetSight() != nil && self:GetSight().ReticleHybrid != nil && self:GetSight().ReticleHybrid.OnAnimation != nil) then
-            len = self:GetAnimLength(self:GetSight().ReticleHybrid.OnAnimation)
-        end
-
-        local speed = 1 / len;
-        self:SetAimModeDelta(math.min(self:GetAimModeDelta() + speed * FrameTime(), 1))
-    else
-        local len = self:GetAnimLength("Ads_Out") * 0.5
-
-        if (self:GetSight() != nil && self:GetSight().ReticleHybrid != nil && self:GetSight().ReticleHybrid.OffAnimation != nil) then
-            len = self:GetAnimLength(self:GetSight().ReticleHybrid.OffAnimation)
-        end
-
-        local speed = 1 / len;
-        self:SetAimModeDelta(math.max(self:GetAimModeDelta() - speed * FrameTime(), 0))
-    end
 end
 
 function SWEP:BreathingModule()
-    if (self:GetSight() != nil && self:GetSight().Optic != nil && self:GetAimModeDelta() <= self.m_hybridSwitchThreshold) then
+    if (self:GetSight() != nil && self:GetSight().Optic != nil && self:GetAimModeDelta() <= self.m_hybridSwitchThreshold && GetConVar("mgbase_sv_breathing"):GetInt() > 0) then
         local mul = 0.5
 
         if (self:GetIsAiming()) then

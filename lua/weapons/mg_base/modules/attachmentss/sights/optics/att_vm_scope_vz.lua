@@ -23,7 +23,7 @@ ATTACHMENT.Optic = {
 }
 ATTACHMENT.Reticle = {
     Material = Material("viper/mw/reticles/reticle_int_default.vmt"),
-    Size = 800,
+    Size = 1200,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }

@@ -33,17 +33,19 @@ end
 
 --https://github.com/Lexicality/stencil-tutorial/blob/master/lua/stencil_tutorial/06_cutting_holes_in_props.lua
 function ATTACHMENT:Render(weapon)
-    local bCanRemoveBodygroup = weapon:GetAimMode() == 0 && weapon:GetAimDelta() > 0.9
+
+    local bCanRemoveBodygroup = weapon:GetAimModeDelta() < 0.5 && weapon:GetAimDelta() > 0.9
+    
     self.m_Model:SetBodygroup(
         self.m_Model:FindBodygroupByName(self.Optic.LensBodygroup), 
         bCanRemoveBodygroup && 0 || 1
     )
 
-    if (weapon:GetAimMode() > 0 || weapon:GetAimDelta() < 0.9) then
+    if (!bCanRemoveBodygroup) then
         self.m_Model:DrawModel()
         return
     end
-
+ 
 	render.SetStencilWriteMask(0xFF)
 	render.SetStencilTestMask(0xFF)
 	render.SetStencilReferenceValue(0)
@@ -74,7 +76,7 @@ function ATTACHMENT:Render(weapon)
 
     ------------------------------
 
-    self:DoReticleStencil(self.hideModel, self.Reticle)
+    self:DoReticleStencil(self.hideModel, self.Reticle, weapon)
 
     ------------------------------
 

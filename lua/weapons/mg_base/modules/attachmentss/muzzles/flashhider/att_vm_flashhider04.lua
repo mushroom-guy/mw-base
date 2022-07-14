@@ -5,5 +5,11 @@ ATTACHMENT.Icon = Material("viper/mw/attachments/icons/muzzle/icon_attachment_fl
 ATTACHMENT.BonemergeToCategory = {"Barrels"}
 ATTACHMENT.AttachmentBodygroups = {
     ["tag_tip"] = 1,
+    ["muzzle"] = 1,
+    ["tip"] = 1
+}
+ATTACHMENT.Bodygroups = {
+    ["tag_tip"] = 1,
+    ["muzzle"] = 1,
     ["tip"] = 1
 }

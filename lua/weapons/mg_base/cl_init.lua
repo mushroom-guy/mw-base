@@ -10,7 +10,7 @@ CreateClientConVar("mgbase_gloves", "", true, true, "Change first person arms gl
 CreateClientConVar("mgbase_gloves_skin", "0", true, true, "Change first person arms gloves.", 0)
 CreateClientConVar("mgbase_toggleaim", "0", true, true, "Hold to aim.", 0, 1)
 CreateClientConVar("mgbase_autoreload", "1", true, true, "Toggle auto reload.", 0, 1)
-CreateClientConVar("mgbase_scopesens", "1", true, true, "Scope aim sensitivity.", 0.01, 10)
+CreateClientConVar("mgbase_aimassist", "1", true, true, "Toggle aim assist.", 0, 1)
 CreateClientConVar("mgbase_saveatts", "1", true, true, "Toggle attachments saving.", 0, 1)
 CreateClientConVar("mgbase_manualrechamber", "0", true, true, "Toggle manual rechambering.", 0, 1)
 CreateClientConVar("mgbase_fx_vmblur_hip", "1", true, true, "Toggle viewmodel blur when firing from the hip.", 0, 1)

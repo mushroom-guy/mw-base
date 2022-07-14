@@ -22,11 +22,13 @@ ATTACHMENT.Optic = {
     Thermal = false
 }
 ATTACHMENT.Reticle = {
-    Material = Material("viper/mw/reticles/reticle_int_default.vmt"),
-    Size = 1000,
+    Material = Material("viper/mw/reticles/reticle_sniper_new.vmt"),
+    Size = 5000,
     Color = Color(255, 255, 255, 255),
-    Attachment = "reticle"
+    Attachment = "reticle",
+    Offset = Vector(-0.09, 0.01, 0)
 }
+
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
