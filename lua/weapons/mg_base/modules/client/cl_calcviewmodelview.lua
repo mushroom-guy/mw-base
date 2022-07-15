@@ -158,7 +158,8 @@ function SWEP:CalcViewModel(ViewModel, EyePos, EyeAng)
     self.m_ViewModel:SetPos(EyePos)
     self.m_ViewModel:SetAngles(EyeAng)
 
-    self.ViewModelFOV = self:SafeLerp(self.Camera.Fov, self.m_OriginalViewModelFOV, self.m_OriginalViewModelFOV * self.Zoom.ViewModelFovMultiplier) 
+    local aimLerpFinal = Lerp(self.Camera.FovAimDelta, self.Zoom.ViewModelFovMultiplier, 0.9)
+    self.ViewModelFOV = self:SafeLerp(self.Camera.Fov, self.m_OriginalViewModelFOV, self.m_OriginalViewModelFOV * aimLerpFinal) 
     * math.max(Lerp(self:GetAimDelta(), GetConVar("mgbase_fx_vmfov"):GetFloat(), GetConVar("mgbase_fx_vmfov_ads"):GetFloat()), 0.1)
 end
 

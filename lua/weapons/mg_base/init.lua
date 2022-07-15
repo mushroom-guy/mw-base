@@ -37,6 +37,15 @@ util.AddNetworkString("mgbase_tpanim")
 util.AddNetworkString("mgbase_customize")
 util.AddNetworkString("mgbase_customize_att")
 
+concommand.Add("mgbase_reloadatts", function(p)
+    if (!p:IsSuperAdmin()) then
+        return
+    end
+
+    include("autorun/mw_loader.lua")
+    p:SendLua("include('autorun/mw_loader.lua')")
+end)
+
 net.Receive("mgbase_customize", function(len, ply)
     local state = net.ReadBool()
     local weapon = ply:GetActiveWeapon()

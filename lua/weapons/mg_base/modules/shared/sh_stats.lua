@@ -26,13 +26,31 @@ SWEP.StatDefinitions = {
     ["SWEP.Recoil.Vertical.2"] = "VerticalRecoil",
     ["SWEP.Recoil.Horizontal.1"] = "HorizontalRecoil",
     ["SWEP.Recoil.Horizontal.2"] = "HorizontalRecoil",
+    ["SWEP.Recoil.Shake"] = "Shake",
     ["SWEP.Animations.Melee_Hit.Length"] = "MeleeSpeed",
     ["SWEP.Animations.Melee.Length"] = "MeleeSpeed",
     ["SWEP.Animations.Melee_Hit.Damage"] = "MeleeDamage",
+    ["SWEP.Projectile.Speed"] = "ProjectileSpeed",
+    ["SWEP.Projectile.Gravity"] = "ProjectileGravity",
     ["SWEP.Bullet.NumBullets"] = "Bullets"
 }
 
 SWEP.StatInfo = {
+    ["Shake"] = {
+        Name = "Aim Stability",
+        ProIfMore = false,
+        ShowPercentage = true
+    },
+    ["ProjectileSpeed"] = {
+        Name = "Projectile Velocity",
+        ProIfMore = true,
+        ShowPercentage = true
+    },
+    ["ProjectileGravity"] = {
+        Name = "Projectile Stability",
+        ProIfMore = false,
+        ShowPercentage = true
+    },
     ["ClipSize"] = {
         Name = "Magazine Size",
         ProIfMore = true,

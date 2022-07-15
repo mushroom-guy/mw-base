@@ -125,7 +125,9 @@ function SWEP:RenderRigs()
         self:GetOwner():GetHands():SetParent(self.m_ViewModel)
         self:GetOwner():GetHands():AddEffects(EF_BONEMERGE)
         self.m_ViewModel.Hands:SetParent(NULL)
+        self.m_ViewModel.Hands:SetNoDraw(true)
         self.m_ViewModel.Hands.Gloves:SetParent(NULL)
+        self.m_ViewModel.Hands.Gloves:SetNoDraw(true)
         self.UseHands = true
     else
         --sleeves
@@ -135,6 +137,7 @@ function SWEP:RenderRigs()
 
         self.m_ViewModel.Hands:SetParent(self.m_ViewModel)
         self.m_ViewModel.Hands:AddEffects(EF_BONEMERGE)
+        self.m_ViewModel.Hands:SetNoDraw(false)
         self.m_ViewModel.Hands:SetSkin(GetConVar("mgbase_rig_skin"):GetInt())
 
         --gloves
@@ -144,6 +147,7 @@ function SWEP:RenderRigs()
 
         self.m_ViewModel.Hands.Gloves:SetParent(self.m_ViewModel.Hands)
         self.m_ViewModel.Hands.Gloves:AddEffects(EF_BONEMERGE)
+        self.m_ViewModel.Hands.Gloves:SetNoDraw(false)
         self.m_ViewModel.Hands.Gloves:SetSkin(GetConVar("mgbase_gloves_skin"):GetInt())
 
         self:GetOwner():GetHands():SetParent(self:GetOwner():GetViewModel())

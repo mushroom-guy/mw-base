@@ -94,8 +94,8 @@ SWEP.BarrelSmoke = {
 }
 
 SWEP.Cone = {
-    Hip = 0.45, --accuracy while hip
-    Ads = 0.45, --accuracy while aiming
+    Hip = 0.8, --accuracy while hip
+    Ads = 0.8, --accuracy while aiming
     Increase = 0.085, --increase cone size by this amount every time we shoot
     AdsMultiplier = 0.15, --multiply the increase value by this amount while aiming
     Max = 2.5, --the cone size will not go beyond this size
@@ -106,14 +106,14 @@ SWEP.Cone = {
 SWEP.Recoil = {
     Vertical = {4, 6.5}, --random value between the 2
     Horizontal = {-1.75, 2.75}, --random value between the 2
-    Shake = 4, --camera shake
+    Shake = 6, --camera shake
     AdsMultiplier = 0.35, --multiply the values by this amount while aiming
     Seed = 65947, --give this a random number until you like the current recoil pattern
     ViewModelMultiplier = 0.56
 }
 
 SWEP.Bullet = {
-    Damage = {110, 40}, --first value is damage at 0 meters from impact, second value is damage at furthest point in effective range
+    Damage = {103, 40}, --first value is damage at 0 meters from impact, second value is damage at furthest point in effective range
     EffectiveRange = 20, --in meters, damage scales within this distance
     DropOffStartRange = 15,
     Range = 40, --in meters, after this distance the bullet stops existing

@@ -336,8 +336,8 @@ SWEP.Animations = {
 
     ["Ads_In"] = {
         Sequences = {"ads_in"},
-        Length = 0.4,
-        Fps = 30,
+        Length = 0.15,
+        Fps = 25,
         NextSequence = "Idle",
         Events = {
             {Time = 0, Callback = function(self) self:EnableGrip2() end},
@@ -348,8 +348,8 @@ SWEP.Animations = {
 
     ["Ads_Out"] = {
         Sequences = {"ads_out"},
-        Length = 0.4,
-        Fps = 30,
+        Length = 0.15,
+        Fps = 25,
         NextSequence = "Idle",
         Events = {
             {Time = 0, Callback = function(self) self:EnableGrip2() end},

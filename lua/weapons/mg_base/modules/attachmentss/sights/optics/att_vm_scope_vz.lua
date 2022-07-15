@@ -1,5 +1,5 @@
-ATTACHMENT.Base = "att_optic"
-ATTACHMENT.Name = "Variable Zoom Scope"
+ATTACHMENT.Base = "att_optic_10x"
+ATTACHMENT.Name = "Variable(?) Zoom Scope"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_scope_vz.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_scope_vz.vmt")
 ATTACHMENT.Bodygroups ={
@@ -29,13 +29,9 @@ ATTACHMENT.Reticle = {
 }
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
-
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.7
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.7
-    weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.9
-    weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.55
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.9
     weapon.Zoom.FovMultiplier = 0.125
 end

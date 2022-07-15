@@ -4,6 +4,7 @@ ATTACHMENT.Model = Model("models/viper/mw/attachments/romeo870/attachment_vm_sh_
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/romeo870/icon_attachment_sh_romeo870_barrel_long.vmt")
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
     weapon.Cone.Hip =  weapon.Cone.Hip * 0.9
@@ -15,7 +16,3 @@ function ATTACHMENT:Stats(weapon)
     weapon.Bullet.EffectiveRange = weapon.Bullet.EffectiveRange * 1.1
     weapon.Primary.ClipSize = 10
 end
-
-function ATTACHMENT:PostProcess(weapon)
-    BaseClass.PostProcess(self, weapon)
-end 

@@ -326,6 +326,7 @@ SWEP.Animations = {
                 Time = 0, 
                 Callback = function(self) 
                     self:DoParticle("MuzzleFlash", "muzzle")
+                    self:DoEjection("shell_eject")
                 end
             },
             {Time = 0, Callback = function(self) self:EnableGrip() end},

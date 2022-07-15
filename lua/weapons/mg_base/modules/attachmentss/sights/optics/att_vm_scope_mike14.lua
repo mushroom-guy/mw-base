@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_optic"
+ATTACHMENT.Base = "att_optic_10x"
 ATTACHMENT.Name = "Sniper Scope"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/weapon_vm_scope_mike14_alt.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_snprscope_mike14.vmt")
@@ -28,15 +28,3 @@ ATTACHMENT.Reticle = {
     Attachment = "reticle",
     Offset = Vector(-0.09, 0.01, 0)
 }
-
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.7
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.7
-    weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.9
-    weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.65
-    weapon.Zoom.FovMultiplier = 0.125
-end

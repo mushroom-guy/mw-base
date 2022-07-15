@@ -19,9 +19,7 @@ function ATTACHMENT:DoReticleStencil(model, ret, weapon)
     render.SetStencilZFailOperation(STENCIL_KEEP)
     render.SetStencilEnable(true)
     render.SetStencilReferenceValue(MWBASE_STENCIL_REFVALUE + 1)
-
     model:DrawModel()
-
     render.SetStencilCompareFunction(STENCIL_EQUAL)
 
     local att = self.m_Model:GetAttachment(self.m_Model:LookupAttachment(ret.Attachment))
@@ -30,7 +28,7 @@ function ATTACHMENT:DoReticleStencil(model, ret, weapon)
     render.SetMaterial(ret.Material)
     --i don't know which one is faster, but the second one has a roll option
     --render.DrawSprite(att.Pos + att.Ang:Forward() * 100, size * 0.01, size * 0.01, color)
-
+    
     local offset = att.Ang:Forward() * 100
     
     if (ret.Offset != nil) then

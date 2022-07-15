@@ -91,8 +91,8 @@ SWEP.BarrelSmoke = {
 }
 
 SWEP.Cone = {
-    Hip = 0.4, --accuracy while hip
-    Ads = 0.4, --accuracy while aiming
+    Hip = 1, --accuracy while hip
+    Ads = 1, --accuracy while aiming
     Increase = 0.085, --increase cone size by this amount every time we shoot
     AdsMultiplier = 0.15, --multiply the increase value by this amount while aiming
     Max = 1.7, --the cone size will not go beyond this size
@@ -103,7 +103,7 @@ SWEP.Cone = {
 SWEP.Recoil = {
     Vertical = {4, 6.5}, --random value between the 2
     Horizontal = {-1.75, 2.75}, --random value between the 2
-    Shake = 3, --camera shake
+    Shake = 4, --camera shake
     AdsMultiplier = 0.35, --multiply the values by this amount while aiming
     Seed = 6874, --give this a random number until you like the current recoil pattern
 }

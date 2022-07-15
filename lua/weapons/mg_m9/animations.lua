@@ -144,7 +144,7 @@ SWEP.Animations = {
 
     ["Reload_Empty"] = {
         Sequences = {"reload_empty"},
-        Length = 2,
+        Length = 1.8,
         Fps = 30,
         MagLength = 0.75,
         NextSequence = "Idle",
@@ -161,7 +161,7 @@ SWEP.Animations = {
 
     ["Reload_Empty_Xmag"] = {
         Sequences = {"reload_empty_xmag"},
-        Length = 2,
+        Length = 1.8,
         Fps = 30,
         MagLength = 0.75,
         NextSequence = "Idle",
@@ -178,7 +178,7 @@ SWEP.Animations = {
 
     ["Reload_Empty_XmagLrg"] = {
         Sequences = {"reload_empty_xmaglrg"},
-        Length = 2,
+        Length = 1.8,
         Fps = 30,
         MagLength = 0.75,
         NextSequence = "Idle",

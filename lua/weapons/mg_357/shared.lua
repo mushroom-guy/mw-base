@@ -35,7 +35,7 @@ SWEP.ParticleEffects = {
 SWEP.Trigger = {
     PressedSound = Sound("MW19_357.Charge"),
     PressedAnimation = "Charge",
-    Time = 0.15
+    Time = 0.075
 }
 
 SWEP.Primary.Sound = Sound("MW19_357.Fire")
@@ -100,9 +100,9 @@ SWEP.Recoil = {
 }
 
 SWEP.Bullet = {
-    Damage = {70, 28}, --first value is damage at 0 meters from impact, second value is damage at furthest point in effective range
+    Damage = {100, 28}, --first value is damage at 0 meters from impact, second value is damage at furthest point in effective range
     EffectiveRange = 35, --in meters, damage scales within this distance
-    DropOffStartRange = 10, --in meters, damage scales within this distance
+    DropOffStartRange = 12, --in meters, damage scales within this distance
     Range = 100, --in meters, after this distance the bullet stops existing
     Tracer = true, --show tracer
     NumBullets = 1, --the amount of bullets to fire
@@ -131,7 +131,7 @@ SWEP.WorldModelOffsets = {
 SWEP.ViewModelOffsets = {
     Aim = {
         Angles = Angle(0, 0, 0),
-        Pos = Vector(0, 0, 0)
+        Pos = Vector(0, -4, 0)
     },
     Idle = {
         Angles = Angle(0, 0, 0),

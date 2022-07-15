@@ -91,8 +91,8 @@ SWEP.BarrelSmoke = {
 }
 
 SWEP.Cone = {
-    Hip = 0.5, --accuracy while hip
-    Ads = 0.5, --accuracy while aiming
+    Hip = 0.75, --accuracy while hip
+    Ads = 0.75, --accuracy while aiming
     Increase = 0.085, --increase cone size by this amount every time we shoot
     AdsMultiplier = 0.15, --multiply the increase value by this amount while aiming
     Max = 2.5, --the cone size will not go beyond this size

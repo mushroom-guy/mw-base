@@ -95,7 +95,7 @@ SWEP.Customization = {
     {"attachment_vm_sh_charlie725_guard", "attachment_vm_sh_charlie725_forendtactical", "attachment_vm_sh_charlie725_forendstable",
     "attachment_vm_sh_charlie725_foreendlight"},
 
-    {"att_ammo", "att_ammo_db", "att_ammo_flechette",
+    {"att_ammo_default", "att_ammo_db", "att_ammo_flechette",
     "att_ammo_he", "att_ammo_slugs"},
 
     {"attachment_vm_sh_charlie725_stock", "attachment_vm_sh_charlie725_stock_sawnoff", "attachment_vm_sh_charlie725_stocklight", 

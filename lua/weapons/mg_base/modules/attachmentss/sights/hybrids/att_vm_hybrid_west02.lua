@@ -1,5 +1,5 @@
-ATTACHMENT.Base = "att_hybrid"
-ATTACHMENT.Name = "4.0x Flip Hybrid"
+ATTACHMENT.Base = "att_hybrid_3x"
+ATTACHMENT.Name = "3.0x Flip Hybrid"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_hybrid_west02.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/hybrid/icon_attachment_hybrid_west02_lw.vmt")
 ATTACHMENT.Bodygroups ={
@@ -24,29 +24,17 @@ ATTACHMENT.Optic = {
 }
 
 ATTACHMENT.Reticle = {
-    Material = Material("viper/shared/reticles/eotech_reticle"),
-    Size = 250,
+    Material = Material("viper/mw/reticles/reticle_acog_default3.vmt"),
+    Size = 650,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
 
 ATTACHMENT.ReticleHybrid = {
-    Material = Material("viper/shared/reticles/eotech_reticle"),
-    Size = 250,
-    Color = Color(255, 255, 255, 255),
+    Material = Material("viper/mw/reticles/reticle_holo_default.vmt"),
+    Size = 800,
+    Color = Color(255, 255, 255, 200),
     OnAnimation = "HybridOn",
     OffAnimation = "HybridOff",
     Attachment = "reticle2"
 }
-
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.8
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.8
-    weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.9
-    weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = 0.95
-    weapon.Zoom.FovMultiplier = 0.7
-end

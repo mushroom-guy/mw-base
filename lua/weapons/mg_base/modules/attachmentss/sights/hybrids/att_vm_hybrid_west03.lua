@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_hybrid"
+ATTACHMENT.Base = "att_hybrid_4x"
 ATTACHMENT.Name = "Canted Hybrid"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_hybrid_west03.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_4x_west02.vmt")
@@ -21,8 +21,8 @@ ATTACHMENT.Optic = {
     Thermal = false
 }
 ATTACHMENT.Reticle = {
-    Material = Material("viper/shared/reticles/eotech_reticle"),
-    Size = 200,
+    Material = Material("viper/mw/reticles/reticle_acog_default3.vmt"),
+    Size = 500,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
@@ -32,14 +32,3 @@ ATTACHMENT.ReticleHybrid = {
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle2"
 }
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.8
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.8
-    weapon.Animations.Draw.Fps = weapon.Animations.Draw.Fps * 0.9
-    weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = 0.95
-    weapon.Zoom.FovMultiplier = 0.7
-end

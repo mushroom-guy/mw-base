@@ -5,7 +5,9 @@ ATTACHMENT.Icon = Material("viper/mw/attachments/icons/romeo870/icon_attachment_
 ATTACHMENT.AttachmentBodygroups = {
     ["sight"] = 0
 }
+
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
     weapon.Cone.Hip =  weapon.Cone.Hip * 1.5
@@ -16,7 +18,3 @@ function ATTACHMENT:Stats(weapon)
     weapon.Animations.Holster.Fps = weapon.Animations.Holster.Fps * 1.2
     weapon.Primary.ClipSize = 5
 end
-
-function ATTACHMENT:PostProcess(weapon)
-    BaseClass.PostProcess(self, weapon)
-end 

@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_optic"
+ATTACHMENT.Base = "att_optic_4x"
 ATTACHMENT.Name = "Cronen C480 Pro Optic"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_4x_west02.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_4x_west02.vmt")
@@ -21,17 +21,8 @@ ATTACHMENT.Optic = {
     Thermal = false
 }
 ATTACHMENT.Reticle = {
-    Material = Material("viper/shared/reticles/eotech_reticle"),
-    Size = 150,
+    Material = Material("viper/mw/reticles/reticle_acog_default3.vmt"),
+    Size = 500,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.9
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.2
-    weapon.Zoom.FovMultiplier = 0.4
-end

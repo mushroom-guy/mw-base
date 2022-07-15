@@ -1,10 +1,10 @@
-ATTACHMENT.Base = "att_sight_reticle"
+ATTACHMENT.Base = "att_sight_1x"
 ATTACHMENT.Name = "PBX Holo 7 Sight"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_holo_west02.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/reticles/icon_attachment_holo_west02.vmt")
 ATTACHMENT.Reticle = {
-    Material = Material("viper/shared/reticles/eotech_reticle.vmt"),
-    Size = 300,
+    Material = Material("viper/mw/reticles/reticle_reflex_default3"),
+    Size = 800,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
@@ -18,11 +18,3 @@ ATTACHMENT.AttachmentBodygroups ={
     ["tag_rail"] = 1,
     ["sight"] = 1
 }
-
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-    
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.8
-    weapon.Zoom.FovMultiplier = 0.9
-end

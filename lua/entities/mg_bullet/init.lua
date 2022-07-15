@@ -92,7 +92,7 @@ function ENT:Impact(tr, phys, bHull)
 			IgnoreEntity = self,
 			Callback = function(attacker, tr, dmgInfo)
 				dmgInfo:SetInflictor(self.Weapon)
-				dmgInfo:SetDamageType(dmgInfo:GetDamageType() + DMG_DIRECT + self:GetDamageType())
+				dmgInfo:SetDamageType(DMG_DIRECT + self:GetDamageType())
 				self.Weapon:BulletCallback(attacker, tr, dmgInfo)
 			end
 		})

@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_optic"
+ATTACHMENT.Base = "att_optic_4x"
 ATTACHMENT.Name = "Scout Combat Optic"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_4x_west.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_4x_west.vmt")
@@ -26,12 +26,3 @@ ATTACHMENT.Reticle = {
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.9
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.2
-    weapon.Zoom.FovMultiplier = 0.4
-end

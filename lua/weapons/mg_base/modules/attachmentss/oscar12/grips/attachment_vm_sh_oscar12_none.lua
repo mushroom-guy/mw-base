@@ -1,8 +1,10 @@
 ATTACHMENT.Base = "att_grip"
 ATTACHMENT.Name = "No Grip"
-ATTACHMENT.Icon = Material("viper/mw/attachments/icons/perks/perk_icon_fastreload.vmt")
+ATTACHMENT.Icon = Material("viper/mw/attachments/icons/perks/perk_icon_hand.vmt")
+ATTACHMENT.CosmeticChange = true
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
     weapon.Animations.Melee = weapon.Animations.Melee_Queer
@@ -11,5 +13,5 @@ end
 
 function ATTACHMENT:PostProcess(weapon)
     BaseClass.PostProcess(self, weapon)
-        weapon:SetGripPoseParameter("grip_queer_offset")
+    weapon:SetGripPoseParameter("grip_queer_offset")
 end 

@@ -1,6 +1,6 @@
-ATTACHMENT.Base = "att_hybrid_4x"
-ATTACHMENT.Name = "Merc Thermal Hybrid"
-ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_hybrid.mdl")
+ATTACHMENT.Base = "att_optic_4x"
+ATTACHMENT.Name = "Merc Thermal Optic"
+ATTACHMENT.Model = Model("models/viper/mw/attachments/attachment_vm_thermal_east.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/optics/icon_attachment_thermal_east.vmt")
 ATTACHMENT.Bodygroups ={
     ["tag_sight"] = 2,
@@ -25,10 +25,4 @@ ATTACHMENT.Reticle = {
     Size = 750,
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
-}
-ATTACHMENT.ReticleHybrid = {
-    Material = Material("viper/shared/reticles/aimpoint_reticle.vmt"),
-    Size = 150,
-    Color = Color(255, 255, 255, 255),
-    Attachment = "reticle2"
 }

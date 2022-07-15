@@ -102,6 +102,27 @@ function SWEP:MakeLight(pos, color, brightness, dieTime)
     end
 end
 
+local function drawHitDebug(self, tr, damage, dist, effectiveRange, dropoffStart)
+    RunConsoleCommand("clear_debug_overlays")
+
+    timer.Simple(0, function()
+        local original = weapons.Get(self:GetClass())
+        local ang = tr.HitNormal:Angle()
+        debugoverlay.EntityTextAtPosition(tr.HitPos, 0, "°", 5, Color(0, 255, 0, 255))
+
+        --check if we have any atts that change range
+        if (self.Bullet.EffectiveRange != original.Bullet.EffectiveRange
+            || self.Bullet.DropOffStartRange != original.Bullet.DropOffStartRange
+            || self.Bullet.Damage[1] != original.Bullet.Damage[1]
+            || self.Bullet.Damage[2] != original.Bullet.Damage[2]) then
+            debugoverlay.ScreenText(0.55, 0.51, "You have attachments that modify range values!", 5, Color(255, 100, 50, 255))
+        end
+
+        debugoverlay.ScreenText(0.55, 0.52, math.Round(dist - dropoffStart).." / "..math.Round(effectiveRange).." units ("..self.Bullet.EffectiveRange.."m)", 5, Color(0, 200, 50, 255))
+        debugoverlay.ScreenText(0.55, 0.53, math.floor(damage).." damage (raw)", 5, Color(255, 200, 0, 255))
+    end)
+end
+
 function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
     local dist = tr.HitPos:Distance(self:GetOwner():GetShootPos())
     local effectiveRange = self:MetersToHU(self.Bullet.EffectiveRange)
@@ -113,21 +134,14 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
     local pen = self.Bullet.Penetration
 
     if (SERVER && GetConVar("mgbase_debug_range"):GetInt() > 0) then
-        local original = weapons.Get(self:GetClass())
-        if (self.Bullet.EffectiveRange != original.Bullet.EffectiveRange
-            || self.Bullet.Damage[1] != original.Bullet.Damage[1]
-            || self.Bullet.Damage[2] != original.Bullet.Damage[2]) then
-            debugoverlay.EntityTextAtPosition(tr.HitPos, 0, "You have attachments that modify range values!", 5, Color(255, 100, 50, 255))
-        end
-        debugoverlay.EntityTextAtPosition(tr.HitPos, 1, math.Round(dist - dropoffStart).." / "..math.Round(effectiveRange).." units ("..self.Bullet.EffectiveRange.."m)", 5, Color(0, 200, 50, 255))
-        debugoverlay.EntityTextAtPosition(tr.HitPos, 2, math.floor(damage).." damage (raw)", 5, Color(255, 200, 0, 255))
+        drawHitDebug(self, tr, damage, dist, effectiveRange, dropoffStart)
     end
 
-    if (self.Bullet.NumBullets > 1 || self.Projectile != nil || self:Clip1() % 2 != 0) then --every second bullet will penetrate, this is to save on cpu time
-        pen = nil
-    end
+    local bCanPenetrate = self.Bullet.NumBullets <= 1 
+        && (self.Projectile == nil || self.Projectile.Penetrate) 
+        && (self:GetMaxClip1() <= 10 || self:Clip1() % 2 == 0)
 
-    if (pen != nil) then
+    if (bCanPenetrate) then
         if (self:GetPenetrationCount() < pen.MaxCount) then
             local mul = pen.DamageMultiplier
             local c = pen.MaxCount - self:GetPenetrationCount()
@@ -147,8 +161,19 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
         damage = damage * GetConVar("mgbase_sv_pvedamage"):GetFloat()
     end
 
-    if (tr.HitGroup == HITGROUP_HEAD) then
+    local bGenericButHead = tr.HitGroup == HITGROUP_GENERIC && tr.HitPos.z > tr.Entity:EyePos().z
+    local bHeadshot = tr.HitGroup == HITGROUP_HEAD || bGenericButHead
+    
+    if (bGenericButHead) then
+        damage = damage * 2
+    end
+
+    if (bHeadshot) then
         damage = damage * (self.Bullet.HeadshotMultiplier || 1)
+    elseif (tr.HitGroup == HITGROUP_LEFTARM || tr.HitGroup == HITGROUP_RIGHTARM) then
+        damage = damage * 4
+    elseif (tr.HitGroup == HITGROUP_LEFTLEG || tr.HitGroup == HITGROUP_RIGHTLEG) then
+        damage = damage * 2
     end
 
     dmgInfo:SetDamage(damage + 1)
@@ -157,7 +182,7 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
         dmgInfo:SetDamage(0)
     end
 
-    if (pen != nil) then
+    if (bCanPenetrate) then
         self.lastHitEntity = tr.Entity
     end
 
@@ -175,33 +200,13 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
                 att:OnImpact(self, dmgInfo, tr)
             end
         end
-        --TODO
-        --[[if (self:HasAttachment("sh_db")) then
-            if (SERVER && table.HasValue(self.FireSurfaces, tr.MatType)) then
-                tr.Entity:Ignite(2)
-            end
-            ParticleEffect("AC_muzzle_shotgun_db", tr.HitPos, tr.HitNormal:Angle())
-            util.Decal("Dark", tr.HitPos + tr.HitNormal, tr.HitPos - (tr.HitNormal * 3), {self, self:GetOwner()})
-            dmgInfo:SetDamageType(dmgInfo:GetDamageType() + DMG_BURN + DMG_SLOWBURN)
-            self:MakeLight(tr.HitPos, Color(255, 50, 0), 2, CurTime() + 1)
-        elseif (self:HasAttachment("sh_he")) then
-            if (SERVER) then
-                util.BlastDamage(self, self:GetOwner(), tr.HitPos, 32, self.Bullet.Damage[1] / self.Bullet.NumBullets)
-            end
-            ParticleEffect("AC_muzzle_shotgun", tr.HitPos, tr.HitNormal:Angle())
-            util.Decal("FadingScorch", tr.HitPos + tr.HitNormal, tr.HitPos - (tr.HitNormal * 3), {self, self:GetOwner()})
-            sound.Play("MW.ExplosiveRounds", tr.HitPos, SNDLVL_100dB, 100, 1)
-            dmgInfo:SetDamageType(dmgInfo:GetDamageType() + DMG_BLAST + DMG_AIRBOAT + DMG_ALWAYSGIB)
-            self:MakeLight(tr.HitPos, Color(255, 150, 0), 1, CurTime() + 0.5)
-        end]]
     end
 
     if (damage <= 1.9 || tr.HitTexture == "**displacement**" || bInWater) then
         return
     end
     
-    if (pen != nil && self:GetPenetrationCount() > 0) then
-
+    if (bCanPenetrate && self:GetPenetrationCount() > 0) then
         if (tr.HitNoDraw || tr.HitSky) then
             return
         end
@@ -211,6 +216,8 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
         local start = tr.HitPos
 
         if (IsFirstTimePredicted()) then
+            --debugoverlay.Axis(tr.HitPos, tr.HitNormal:Angle(), 5, 5, true)
+            
             util.TraceLine({
                 start = tr.HitPos + tr.Normal,
                 endpos = tr.HitPos + tr.Normal * pen.Thickness,
@@ -226,6 +233,8 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
                 mask = MASK_SHOT,
                 output = output
             })
+
+            --debugoverlay.Line(tr.HitPos, output.HitPos, 5, Color(255, 0, 0, 255), true)
         end
         
         if (output != nil && !output.StartSolid && !output.HitNoDraw && !output.HitSky) then
@@ -277,6 +286,9 @@ function SWEP:Bullets(hitpos)
         spread = Vector()
     end
     
+    local bCanAssist = self:GetAimDelta() > 0.5 && self:GetOwner():GetInfoNum("mgbase_aimassist", 1) > 0 && GetConVar("mgbase_sv_aimassist"):GetInt() > 0
+    bCanAssist = self.Bullet.NumBullets == 1 && bCanAssist || true
+    
     self:FireBullets({
         Attacker = self:GetOwner(),
         Src = self:GetOwner():EyePos(),
@@ -284,7 +296,7 @@ function SWEP:Bullets(hitpos)
         Spread = spread,
         Num = self.Bullet.NumBullets,
         Damage = self.Bullet.Damage[1], --for some fucking bullet mod or something idk
-        HullSize = (self:GetAimDelta() > 0.5 && self:GetOwner():GetInfoNum("mgbase_aimassist", 1) > 0 && GetConVar("mgbase_sv_aimassist"):GetInt() > 0) && 1 || 0,
+        HullSize = bCanAssist && 1 || 0,
         --Force = (self.Bullet.Damage[1] * self.Bullet.PhysicsMultiplier) * 0.01,
         Distance = self:MetersToHU(self.Bullet.Range) * GetConVar("mgbase_sv_range"):GetFloat(),
         Tracer = self.Bullet.Tracer && 1 || 0,
@@ -395,6 +407,8 @@ function SWEP:Projectiles()
     if (CLIENT) then
         return
     end
+
+    self:SetPenetrationCount(self.Bullet.Penetration != nil && self.Bullet.Penetration.MaxCount || 0)
 
     local proj = ents.Create(self.Projectile.Class)
 

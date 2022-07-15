@@ -4,6 +4,7 @@ ATTACHMENT.Model = Model("models/viper/mw/attachments/romeo870/attachment_vm_sh_
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/romeo870/icon_attachment_sh_romeo870_mag.vmt")
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+
 function ATTACHMENT:Stats(weapon)
     BaseClass.Stats(self, weapon)
     weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.93
@@ -13,6 +14,7 @@ function ATTACHMENT:Stats(weapon)
     weapon.Recoil.AdsMultiplier = weapon.Recoil.AdsMultiplier * 0.9
     weapon.DisableCantedReload = false
     weapon.EmptyReloadRechambers = true
+    weapon.Primary.ClipSize = 6
 end
 
 function ATTACHMENT:PostProcess(weapon)
