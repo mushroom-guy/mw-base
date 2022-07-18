@@ -18,7 +18,9 @@ ATTACHMENT.Optic = {
     LensBodygroup = "lens",
     FOV = 7, 
     ParallaxSize = 600, --a value of zero means 1:1 size with the end of the optic
-    Thermal = true
+    Thermal = true,
+    ThermalBackgroundColor = Color(50, 100, 75, 223),
+    ThermalBodiesColor = Color(250, 250, 0, 150)
 }
 ATTACHMENT.Reticle = {
     Material = Material("viper/mw/reticles/reticle_thermal_default.vmt"),
@@ -26,3 +28,10 @@ ATTACHMENT.Reticle = {
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
+
+local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
+
+function ATTACHMENT:Stats(weapon)
+    BaseClass.Stats(self, weapon)
+    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 0.9
+end

@@ -21,7 +21,7 @@ end
 
 SWEP.Customization = {
 
-    {"att_perk", "att_vm_pi_decho_soh", "att_perk_fmj"},
+    {"att_perk", "att_vm_pi_decho_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_fastswap"},
 
     {"attachment_vm_pi_decho_mag", "attachment_vm_pi_decho_xmags", "attachment_vm_pi_decho_xmags2"},
     
@@ -38,6 +38,10 @@ SWEP.Customization = {
 
     {"att_laser", "att_vm_pi_decho_laser01", "att_vm_pi_decho_laser02", "att_vm_pi_decho_laser03"}
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 -- ["Muzzle"] = {

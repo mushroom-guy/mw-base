@@ -36,6 +36,33 @@ CreateClientConVar("mgbase_debug_wmrender", "1", false, true, "Toggle worldmodel
 CreateClientConVar("mgbase_debug_freezeanim", "0", false, true, "Freeze viewmodel animations.", 0, 1)
 CreateClientConVar("mgbase_debug_animdelta", "0", false, true, "Scrub the current animation on the viewmodel.", 0, 1)
 
+concommand.Add("mgbase_generatepreset", function(p, c, args)
+    local w = p:GetActiveWeapon()
+
+    if (IsValid(w) && weapons.IsBasedOn(w:GetClass(), "mg_base")) then
+        local attachmentList = ""
+
+        for _, a in pairs(w:GetAllAttachmentsInUse()) do
+            if (a.Index > 1) then
+                attachmentList = attachmentList..", \""..a.ClassName.."\""
+            end
+        end
+
+        attachmentList = string.sub(attachmentList, 3)
+
+        local finalPrint = "PRESET.SWEP = \""..w:GetClass().."\"\n"
+        finalPrint = finalPrint.."PRESET.Name = \""..args[1].."\"\n"
+        finalPrint = finalPrint.."PRESET.Attachments = {"..attachmentList.."}"
+
+        print("Here's your preset (copied to clipboard already)")
+        print("Remember to put this in lua/weapons/mg_base/modules/presets")
+        print("From there, create a .lua file with any name you want and paste the contents in there")
+        print("=================")
+        print(finalPrint)
+        SetClipboardText(finalPrint)
+    end
+end)
+
 net.Receive("mgbase_anim", function()
     local seqIndex = net.ReadString()
     local weapon = net.ReadEntity()

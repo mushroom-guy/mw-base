@@ -87,7 +87,7 @@ end
 -- end
 
 SWEP.Customization = {
-    {"att_perk", "attachment_vm_sh_dpapa12_perk_soh", "att_perk_fmj"}, 
+    {"att_perk", "attachment_vm_sh_dpapa12_perk_soh", "att_perk_hip"}, 
 
     {"attachment_vm_sh_dpapa12_barrel", "attachment_vm_sh_dpapa12_barlong", "attachment_vm_sh_dpapa12_barmid",
     "attachment_vm_sh_dpapa12_barshort"},
@@ -116,6 +116,10 @@ SWEP.Customization = {
 
     {"attachment_vm_sh_dpapa12_grip"},
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 --     ["Perk"] = {

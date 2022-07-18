@@ -116,6 +116,7 @@ SWEP.Bullet = {
     Tracer = false, --show tracer
     NumBullets = 1, --the amount of bullets to fire
     PhysicsMultiplier = 1, --damage is multiplied by this amount when pushing objects
+    HeadshotMultiplier = 1,
     Penetration = {
         DamageMultiplier = 0.5, --how much damaged is multipled by when leaving a surface.
         MaxCount = 3, --how many times the bullet can penetrate.

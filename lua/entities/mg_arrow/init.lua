@@ -116,11 +116,31 @@ local function parentEntity(tr, ent)
 	ent:SetAngles(arrowHitAng)
 	ent:SetPos(arrowHitPos)
 end
+
+function ENT:Think()
+	if (!self:GetNailed()) then
+		return
+	end
+
+	if (self.Projectile.PickUp) then
+		local dist = self:GetOwner():NearestPoint(self:GetPos()):DistToSqr(self:GetPos())
+
+		if (dist < 32 * 32) then
+			self:GetOwner():EmitSound("viper/shared/iw8_mp_scavenger_pack_pickup.wav")
+			self:GetOwner():SetAmmo(self:GetOwner():GetAmmoCount("XBowBolt") + 1, "XBowBolt")
+			self:Remove()
+		end
+	end
+end
  
 function ENT:Impact(tr1, phys, bHull)
 	SafeRemoveEntityDelayed(self, 20)
 
 	phys:EnableMotion(false)
+
+	if (self.Projectile.PickUp) then
+		self:AddEffects(EF_ITEM_BLINK)
+	end
 
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetNailed(true)

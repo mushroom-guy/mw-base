@@ -6,15 +6,12 @@ PrecacheParticleSystem("AC_muzzle_pistol_ejection")
 PrecacheParticleSystem("AC_muzzle_pistol_smoke_barrel")
 include("animations.lua") 
 include("customization.lua")
-
-require("mw_utils")
-mw_utils.LoadInjectors(SWEP)   
     
 if CLIENT then
     killicon.Add( "mg_glock", "VGUI/entities/mg_glock", Color(255, 0, 0, 255))
     SWEP.WepSelectIcon = surface.GetTextureID("VGUI/spawnicons/icon_cac_weapon_pi_golf21")
 end
- 
+  
 SWEP.Base = "mg_base"
 
 SWEP.PrintName = "X16" 
@@ -43,7 +40,7 @@ SWEP.Primary.ClipSize = 13
 SWEP.Primary.Automatic = false
 SWEP.Primary.BurstRounds = 1
 SWEP.Primary.BurstDelay = 0
-SWEP.Primary.RPM = 600
+SWEP.Primary.RPM = 600 
 SWEP.CanChamberRound = true
 
 SWEP.Reverb = {
@@ -106,6 +103,7 @@ SWEP.Bullet = {
     Tracer = false, --show tracer
     NumBullets = 1, --the amount of bullets to fire
     PhysicsMultiplier = 1, --damage is multiplied by this amount when pushing objects
+    HeadshotMultiplier = 1,
     Penetration = {
         DamageMultiplier = 0.6, --how much damaged is multipled by when leaving a surface.
         MaxCount = 3, --how many times the bullet can penetrate.

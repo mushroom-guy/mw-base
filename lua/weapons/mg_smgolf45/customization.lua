@@ -20,7 +20,7 @@ function SWEP:doSuppressorStats()
 end
 
 SWEP.Customization = {
-    {"att_perk", "attachment_vm_sm_smgolf45_perk_soh", "att_perk_fmj"}, 
+    {"att_perk", "attachment_vm_sm_smgolf45_perk_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_rof"}, 
 
     {"attachment_vm_sm_smgolf45_stock", "attachment_vm_sm_smgolf45_stockh", 
     "attachment_vm_sm_smgolf45_stock_v2", "attachment_vm_sm_smgolf45_stockcqb", "attachment_vm_sm_smgolf45_stockl"},
@@ -52,6 +52,10 @@ SWEP.Customization = {
     "attachment_vm_sm_smgolf45_stubbygrip02", "attachment_vm_sm_smgolf45_vertgrip01", "attachment_vm_sm_smgolf45_vertgrip02", 
     "attachment_vm_sm_smgolf45_vertgrip03"},
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 --     ["Receiver"] = {

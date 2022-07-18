@@ -137,20 +137,23 @@ end
 function ATTACHMENT:DrawThermal(weapon)
     --DrawColorModify(thermalCC)
 
+    local backgroundColor = self.Optic.ThermalBackgroundColor || Color(50, 50, 50, 240)
+    local bodyColor = self.Optic.ThermalBodiesColor || Color(255, 255, 255, 150)
+
     cam.Start2D()
-        surface.SetDrawColor(50, 50, 50, 253)
+        surface.SetDrawColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
         surface.DrawRect(0, 0, ScrW(), ScrH())
 
         local sun = util.GetSunInfo()
 
-        if (sun.obstruction > 0) then
+        if (sun != nil && sun.obstruction > 0) then
             local pos = EyePos() + sun.direction * 4096
             pos = pos:ToScreen()
             local alpha = 255 * sun.obstruction
             local sunSize = 1024
 
             surface.SetMaterial(sunMaterial)
-            surface.SetDrawColor(255, 255, 255, alpha)
+            surface.SetDrawColor(bodyColor.r, bodyColor.g, bodyColor.b, alpha)
             surface.DrawTexturedRect(pos.x - (sunSize * 0.5), pos.y - (sunSize * 0.5), sunSize, sunSize)
         end
 
@@ -182,7 +185,7 @@ function ATTACHMENT:DrawThermal(weapon)
     render.SetStencilCompareFunction(STENCIL_LESS)
     
     cam.Start2D()
-        surface.SetDrawColor(255, 255, 255, 150)
+        surface.SetDrawColor(bodyColor.r, bodyColor.g, bodyColor.b, bodyColor.a)
         surface.DrawRect(0, 0, ScrW(), ScrH())
     cam.End2D()
 

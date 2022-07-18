@@ -21,7 +21,7 @@ end
 
 SWEP.Customization = {
 
-    {"att_perk", "att_vm_pi_cpapa_soh", "att_perk_fmj"},
+    {"att_perk", "att_vm_pi_cpapa_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_fastswap"},
 
     {"attachment_vm_pi_cpapa_mag", "attachment_vm_pi_cpapa_loader_snake"},
     
@@ -35,6 +35,10 @@ SWEP.Customization = {
 
     {"att_laser", "att_vm_pi_cpapa_laser01", "att_vm_pi_cpapa_laser02", "att_vm_pi_cpapa_laser03"}
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 --[[SWEP.Customization = {
     ["Barrel"] = {

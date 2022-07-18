@@ -6,7 +6,4 @@ ATTACHMENT.Bodygroups = {
     ["tag_sight"] = 3
 }
 ATTACHMENT.ExcludedAttachments =  {"attachment_vm_sm_augolf_lmgrail"}
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-end
+ATTACHMENT.CosmeticChange = true

@@ -40,4 +40,13 @@ function ENT:OnRemove()
 	end
 
     util.Decal("Scorch", self:GetPos(), self:GetPos() + self:GetUp() * -100, {self, self.arrow})
+
+	local ed = EffectData()
+	ed:SetScale(5000)
+	ed:SetOrigin(self:GetPos())
+	ed:SetRadius(512)
+	ed:SetMagnitude(1000)
+	ed:SetScale(1000)
+	ed:SetEntity(self)
+	util.Effect("ShakeRopes", ed)
 end

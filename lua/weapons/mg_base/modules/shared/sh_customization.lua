@@ -200,6 +200,16 @@ function SWEP:GetAttachmentInUseForSlot(slot)
     return self.m_CustomizationInUse[slot]
 end
 
+function SWEP:GetAttachmentInUseByCategory(cat)
+    for _, att in pairs(self:GetAllAttachmentsInUse()) do
+        if (att.Category == cat) then
+            return att
+        end
+    end
+
+    return nil
+end
+
 function SWEP:GetAllAttachmentsInUse()
     return self.m_CustomizationInUse
 end
@@ -275,8 +285,9 @@ function SWEP:BuildCustomizedGun()
             self.reticle = attachment
         end
 
+        attachment:Stats(stats)
+        
         if (attachment.Index > 1) then
-            attachment:Stats(stats)
             self:MakeBreadcrumbsForAttachment(attachment)
         end
     end
@@ -393,7 +404,7 @@ function SWEP:MakeBreadcrumbsForAttachment(attachment)
                 local aName = aStat.Name
                 local bName = bStat.Name
 
-                return aName <= bName
+                return aName < bName
             end
         end
         table.sort(attachment.Breadcrumbs, sort)
@@ -466,6 +477,11 @@ function SWEP:RenderCustomization(model)
             --but realizing i'd cripple half the things on the ws i left this here (and made it a bit easier to develop with)
             local ve = attachment.VElement
             local bone = self:LookupBoneCached(model, ve.Bone)
+
+            if (bone == nil) then
+                error("VElement can't find bone "..ve.Bone.." on model "..model:GetModel())
+            end
+
             local matrix = model:GetBoneMatrix(bone)
 
             if (matrix == nil) then

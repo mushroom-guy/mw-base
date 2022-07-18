@@ -10,7 +10,7 @@ function SWEP:doSuppressorStats()
 end 
  
 SWEP.Customization = {
-    {"att_perk", "att_vm_pi_golf21_soh", "att_perk_fmj"}, 
+    {"att_perk", "att_vm_pi_golf21_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_fastswap"}, 
 
     {"att_stock", "att_vm_pi_golf21_stock"},
 
@@ -27,6 +27,10 @@ SWEP.Customization = {
 
     {"att_laser", "att_vm_laser01_pstl", "att_vm_laser02_pstl", "att_vm_laser03_pstl"}
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 --[[SWEP.Customization = {
     ["Slide"] = {

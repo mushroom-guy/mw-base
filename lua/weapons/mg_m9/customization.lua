@@ -18,9 +18,10 @@ function SWEP:doSuppressorStats()
     }
     self.ParticleEffects.MuzzleFlash = "AC_muzzle_pistol_suppressed"
 end
+
 SWEP.Customization = {
 
-    {"att_perk", "att_vm_pi_mike9_soh", "att_perk_fmj"},
+    {"att_perk", "att_vm_pi_mike9_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_fastswap"},
 
     {"att_receiver", "attachment_vm_pi_mike9_receiver_v2"},
 
@@ -47,6 +48,9 @@ SWEP.Customization = {
     {"att_laser", "att_vm_pi_mike9_laser01", "att_vm_pi_mike9_laser02", "att_vm_pi_mike9_laser03"}
 }
 
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 --     ["Slide"] = {

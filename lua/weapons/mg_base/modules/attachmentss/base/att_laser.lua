@@ -4,7 +4,7 @@ ATTACHMENT.Category = "Lasers"
 
 local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
 
-local function removeFlashlightStuffFromModel(flashModel)
+function ATTACHMENT:RemoveFlashlightStuffFromModel(flashModel)
     if (IsValid(flashModel)) then 
         if (flashModel.mw_flashlightProjTexture != nil) then
             flashModel.mw_flashlightProjTexture:Remove()
@@ -83,7 +83,7 @@ end
 
 function ATTACHMENT:DrawFlashlight(weapon, model)
     if (weapon.DrawHUD == nil) then
-        removeFlashlightStuffFromModel(model)
+        self:RemoveFlashlightStuffFromModel(model)
         return
     end
 
@@ -94,13 +94,13 @@ function ATTACHMENT:DrawFlashlight(weapon, model)
     --checking if we are rendering twice
     --delete one of them if so
     if (model == self.m_Model) then
-        removeFlashlightStuffFromModel(self.m_TpModel)
+        self:RemoveFlashlightStuffFromModel(self.m_TpModel)
     else
-        removeFlashlightStuffFromModel(self.m_Model)
+        self:RemoveFlashlightStuffFromModel(self.m_Model)
     end
     
     if (!weapon:GetFlashlight() || weapon:GetOwner():FlashlightIsOn() || weapon:GetIsHolstering()) then
-        removeFlashlightStuffFromModel(model)
+        self:RemoveFlashlightStuffFromModel(model)
         return
     end
 
@@ -144,8 +144,8 @@ end
 
 function ATTACHMENT:OnRemove(weapon)
     if (CLIENT) then
-        removeFlashlightStuffFromModel(self.m_Model)
-        removeFlashlightStuffFromModel(self.m_TpModel)
+        self:RemoveFlashlightStuffFromModel(self.m_Model)
+        self:RemoveFlashlightStuffFromModel(self.m_TpModel)
     end
 
     BaseClass.OnRemove(self, weapon)

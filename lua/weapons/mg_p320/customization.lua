@@ -21,7 +21,7 @@ end
 
 SWEP.Customization = {
 
-    {"att_perk", "att_vm_pi_papa320_soh", "att_perk_fmj"},
+    {"att_perk", "att_vm_pi_papa320_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_fastswap"},
 
     {"att_receiver", "attachment_vm_pi_papa320_receiver_v2", "attachment_vm_pi_papa320_receiver_v13"},
 
@@ -38,6 +38,10 @@ SWEP.Customization = {
 
     {"att_laser", "att_vm_pi_papa320_laser01", "att_vm_pi_papa320_laser02", "att_vm_pi_papa320_laser03", "attachment_vm_laser_pstl_shoothouse"}
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 --     ["Slide"] = {

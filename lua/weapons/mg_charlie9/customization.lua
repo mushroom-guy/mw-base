@@ -20,7 +20,7 @@ function SWEP:doSuppressorStats()
 end
 
 SWEP.Customization = {
-    {"att_perk", "attachment_vm_sm_charlie9_perk_soh", "att_perk_fmj"}, 
+    {"att_perk", "attachment_vm_sm_charlie9_perk_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_rof"}, 
 
     {"attachment_vm_sm_charlie9_stock", "attachment_vm_sm_charlie9_nostock", "attachment_vm_sm_charlie9_fullstock",
     "att_vm_stock_heavy01", "att_vm_stock_heavy02", 
@@ -53,6 +53,10 @@ SWEP.Customization = {
     "attachment_vm_sm_charlie9_stubbygrip02", "attachment_vm_sm_charlie9_vertgrip01", "attachment_vm_sm_charlie9_vertgrip02", 
     "attachment_vm_sm_charlie9_vertgrip03"},
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 

@@ -202,7 +202,101 @@ function SWEP:BulletCallbackInternal(attacker, tr, dmgInfo)
         end
     end
 
-    if (damage <= 1.9 || tr.HitTexture == "**displacement**" || bInWater) then
+    local bCanRicochet = !tr.bFromRicochet && !bWater && (tr.Entity:IsWorld() || tr.Entity:Health() <= 0) && !tr.Entity:IsNPC() && !tr.Entity:IsPlayer() && !tr.Entity:IsNextBot()
+    math.randomseed(self:Clip1() + self:Ammo1())
+
+    if (self.Bullet.Ricochet && bCanRicochet && math.random(1, math.Clamp(self:GetMaxClip1() / 10, 2, 4)) == 1) then
+        local finalDir = tr.HitNormal + VectorRand()
+
+        if (IsFirstTimePredicted()) then
+            for _, e in pairs(ents.FindInSphere(tr.HitPos, 1024)) do
+                if (e == self:GetOwner()) then
+                    continue
+                end
+                
+                if (!e:IsNPC() && !e:IsPlayer() && !e:IsNextBot()) then
+                    continue
+                end
+
+                if (e:Health() <= 0) then
+                    continue
+                end
+
+                local dir = (e:WorldSpaceCenter() - tr.HitPos):GetNormalized()
+                local dot = tr.HitNormal:Dot(dir)
+
+                if (dot < 0.5) then
+                    continue
+                end
+
+                if (!e:IsLineOfSightClear(tr.HitPos)) then
+                    continue
+                end
+
+                local bCanTarget = (e:IsNPC() || e:IsNextBot()) 
+                    || (e:IsPlayer() && (GetConVar("sbox_playershurtplayers"):GetInt() > 0  || e:Team() != self:GetOwner():Team()))
+
+                if (bCanTarget) then
+                    finalDir = dir + (VectorRand() * 0.01)
+                    break
+                end
+            end
+        end
+
+        if (SERVER) then
+            sound.Play("weapons/fx/rics/ric"..math.random(1, 5)..".wav", tr.HitPos, 85, math.random(95, 105), 1)
+        end --i was forced, suppresshostevents does nothing like always
+        
+        --fire forward
+        self:FireBullets({
+            Attacker = self:GetOwner(),
+            Src = tr.HitPos,
+            Dir = finalDir,
+            Num = 1,
+            Tracer = 0,
+            Callback = function(attacker, tr, dmgInfo)
+                tr.bFromRicochet = true
+                
+                if (IsFirstTimePredicted()) then
+                    local ed = EffectData()
+                    ed:SetScale(5000) --speed
+                    ed:SetStart(tr.StartPos)
+                    ed:SetOrigin(tr.HitPos)
+                    ed:SetNormal(finalDir)
+                    ed:SetEntity(self)
+                    util.Effect("Tracer", ed)
+
+                    ed = EffectData()
+                    ed:SetOrigin(tr.StartPos)
+                    ed:SetMagnitude(1)
+                    ed:SetScale(1)
+                    ed:SetNormal(tr.HitNormal)
+                    ed:SetRadius(2)
+                    util.Effect("Sparks", ed)
+
+                    --[[if (CLIENT) then
+                        local dlight = DynamicLight(self:EntIndex())
+                        if (dlight) then
+                            dlight.pos = tr.StartPos
+                            dlight.r = 255
+                            dlight.g = 75
+                            dlight.b = 0
+                            dlight.brightness = 5
+                            dlight.Decay = 500
+                            dlight.Size = 8
+                            dlight.DieTime = CurTime()
+                        end
+                    end]]
+                end
+                
+                self:BulletCallback(attacker, tr, dmgInfo)
+            end
+        })
+
+        return --stop penetration
+    end
+
+    if (damage <= 1.9 || tr.HitTexture == "**displacement**" || bInWater || tr.bFromRicochet) then
         return
     end
     

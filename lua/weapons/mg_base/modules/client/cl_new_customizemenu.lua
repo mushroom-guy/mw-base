@@ -266,23 +266,13 @@ local function openPresetsMenu(weapon)
     end
 
     table.sort(presets, function(a, b)
-        if (!a._bUserGenerated) then
+        if (!a._bUserGenerated && b._bUserGenerated) then
             return true
-        end
-
-        if (!b._bUserGenerated) then
+        elseif (a._bUserGenerated && !b._bUserGenerated) then
             return false
+        elseif ((a._bUserGenerated && b._bUserGenerated) || (!a._bUserGenerated && !b._bUserGenerated)) then
+            return a.Name < b.Name
         end
-
-        if (a.Name < b.Name) then
-            return true
-        end
-
-        if (a.Name > b.Name) then
-            return false
-        end
-
-        return false
     end)
     
     local menu = vgui.Create("DPanel", background)
@@ -427,15 +417,6 @@ local function openPresetsMenu(weapon)
     for _, preset in pairs(presets) do
         local presetPanel, but = createPresetPanel(preset)
         presetPanel:SetSize(presetsGrid:GetColWide() * 0.9, presetsGrid:GetRowHeight())
-        function but:DoRightClick()
-            if (preset._bUserGenerated) then
-                mw_utils.RemovePreset(preset.ClassName)
-                background:Remove()
-                surface.PlaySound(removePresetSound)
-                openPresetsMenu(weapon)
-            end
-        end
-        
         function but:DoClick()
             if (!self:IsAllowed()) then
                 surface.PlaySound(selectAttachmentSound)
@@ -462,6 +443,50 @@ local function openPresetsMenu(weapon)
             
             surface.PlaySound(presetSound)
             background:Remove()
+        end
+
+        if (preset._bUserGenerated) then
+            local removeButton = vgui.Create("DButton", but)
+            removeButton:SetSize(40, 40)
+            removeButton:Dock(RIGHT)
+            removeButton:SetText("")
+            removeButton:DockMargin(5, 5, 5, 5)
+            removeButton.HoverDelta = 0
+            removeButton.ClickDelta = 0
+            removeButton.bWasHovered = false
+
+            function removeButton:DoClick()
+                mw_utils.RemovePreset(preset.ClassName)
+                background:Remove()
+                surface.PlaySound(removePresetSound)
+                openPresetsMenu(weapon)
+            end
+
+            function removeButton:Paint(w, h)
+                if (self:IsHovered()) then
+                    self.HoverDelta = math.Approach(self.HoverDelta, 1, math.min(10 * RealFrameTime(), 0.1))
+                    
+                    if (!self.bWasHovered) then
+                        surface.PlaySound(hoverAttachmentSounds[math.random(1, #hoverAttachmentSounds)])
+                    end
+                    
+                    self.bWasHovered = true
+                else
+                    self.HoverDelta = math.Approach(self.HoverDelta, 0, math.min(10 * RealFrameTime(), 0.1))
+                    self.bWasHovered = false
+                end
+                
+                if (self:IsDown()) then
+                    self.ClickDelta = math.Approach(self.ClickDelta, 1, math.min(10 * RealFrameTime(), 0.1))
+                else
+                    self.ClickDelta = math.Approach(self.ClickDelta, 0, math.min(10 * RealFrameTime(), 0.1))
+                end
+
+                surface.SetMaterial(removeAttachmentMaterial)
+                surface.SetDrawColor(redColor.r, redColor.g, redColor.b, Lerp(self.HoverDelta * 0.25 + self.ClickDelta * 0.75, redColor.a * 0.1, redColor.a))
+                surface.DrawTexturedRect(w * 0.5 - 14, h * 0.5 - 14, 28, 28)
+            end
+
         end
         
         presetsGrid:AddItem(presetPanel)
@@ -831,6 +856,8 @@ local function openCustomizationMenu(weapon)
             return
         end
         
+        weapon:DrawStats(self)
+
         if (!GetViewEntity():KeyDown(IN_USE)) then
             self.AlphaDelta = Lerp(math.min(10 * RealFrameTime(), 1), self.AlphaDelta, 1)
         else
@@ -1326,11 +1353,13 @@ function SWEP:DrawStat(statInfoIndex, append, index, originalStat, currentStat)
     return x - 20 * scale, y + spacing
 end
 
-function SWEP:DrawStats()
+function SWEP:DrawStats(panel)
     if (!self:GetOwner():KeyDown(IN_USE)) then
         return
     end
     
+    surface.SetAlphaMultiplier(1 - panel.AlphaDelta)
+
     local scale = ScrH() / 1080
     local spacing = 30 * scale
     local x,y = ScrW() * 0.05, ScrH() * 0.5
@@ -1381,4 +1410,6 @@ function SWEP:DrawStats()
     
     statBeforeLineX, statBeforeLineY = self:DrawStat("SprintLength", "s", c, original.Animations.Sprint_Out.Length / (original.Animations.Sprint_Out.Fps / 30), self:GetAnimLength("Sprint_Out"))
     c = c + 1
+
+    surface.SetAlphaMultiplier(1)
 end

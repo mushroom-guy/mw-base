@@ -1,4 +1,4 @@
-ATTACHMENT.Base = "att_optic"
+ATTACHMENT.Base = "att_optic_3x"
 ATTACHMENT.Model = Model("models/viper/mw/attachments/augolf/attachment_vm_sm_augolf_lmgrail.mdl")
 ATTACHMENT.Icon = Material("viper/mw/attachments/icons/augolf/icon_attachment_sm_augolf_lmgrail.vmt")
 ATTACHMENT.Name = "Integral 3.0x Optic"
@@ -20,11 +20,3 @@ ATTACHMENT.Reticle = {
     Color = Color(255, 255, 255, 255),
     Attachment = "reticle"
 }
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-    weapon.Animations.Ads_In.Fps = weapon.Animations.Ads_In.Fps * 0.9
-    weapon.Animations.Ads_Out.Fps = weapon.Animations.Ads_Out.Fps * 0.9
-    weapon.Zoom.ViewModelFovMultiplier = weapon.Zoom.ViewModelFovMultiplier * 1.05
-    weapon.Zoom.FovMultiplier = 0.525
-end

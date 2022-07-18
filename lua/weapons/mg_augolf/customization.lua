@@ -71,7 +71,7 @@ function SWEP:fivefivesixConversion()
 end
 
 SWEP.Customization = {
-    {"att_perk", "attachment_vm_sm_augolf_perk_soh", "att_perk_fmj"}, 
+    {"att_perk", "attachment_vm_sm_augolf_perk_soh", "att_perk_fmj", "att_perk_ricochet", "att_perk_rof"}, 
 
     {"att_stock", "attachment_vm_sm_augolf_stock_tactical", "attachment_vm_sm_augolf_stockl", "attachment_vm_sm_augolf_stocks"},
 
@@ -103,6 +103,10 @@ SWEP.Customization = {
     "attachment_vm_sm_augolf_stubbygrip02", "attachment_vm_sm_augolf_vertgrip01", "attachment_vm_sm_augolf_vertgrip02", 
     "attachment_vm_sm_augolf_vertgrip03"},
 }
+
+--NECESSARY: it loads custom attachments from other authors
+require("mw_utils")
+mw_utils.LoadInjectors(SWEP)   
 
 -- SWEP.Customization = {
 --     ["Barrel"] = {

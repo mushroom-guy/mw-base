@@ -19,6 +19,7 @@ SWEP.StatDefinitions = {
     ["SWEP.Animations.Holster.Fps"] = "SwitchSpeed",
     ["SWEP.Bullet.Damage.1"] = "DamageClose",
     ["SWEP.Bullet.Damage.2"] = "DamageRange",
+    ["SWEP.Bullet.HeadshotMultiplier"] = "HeadshotMultiplier",
     ["SWEP.Bullet.EffectiveRange"] = "EffectiveRange",
     ["SWEP.Bullet.Penetration.Thickness"] = "PenetrationThickness",
     ["SWEP.Recoil.Vertical.1"] = "VerticalRecoil",
@@ -39,6 +40,11 @@ SWEP.StatInfo = {
     ["Shake"] = {
         Name = "Aim Stability",
         ProIfMore = false,
+        ShowPercentage = true
+    },
+    ["HeadshotMultiplier"] = {
+        Name = "Headshot Damage",
+        ProIfMore = true,
         ShowPercentage = true
     },
     ["ProjectileSpeed"] = {

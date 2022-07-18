@@ -5,12 +5,4 @@ ATTACHMENT.Icon = Material("viper/mw/attachments/icons/mpapa5/icon_attachment_sm
 ATTACHMENT.AttachmentBodygroups ={
     ["tag_grip_hide"] = 1
 }
-local BaseClass = GetAttachmentBaseClass(ATTACHMENT.Base)
-function ATTACHMENT:Stats(weapon)
-    BaseClass.Stats(self, weapon)
-end
-
-function ATTACHMENT:PostProcess(weapon)
-    BaseClass.PostProcess(self, weapon)
-    -- weapon:SetGripPoseParameter("grip_smg_pose_offset")
-end 
+ATTACHMENT.CosmeticChange = true

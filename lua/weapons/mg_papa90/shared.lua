@@ -110,7 +110,7 @@ SWEP.Recoil = {
     Vertical = {0.85, 1.15}, --random value between the 2
     Horizontal = {-1.15, 1.15}, --random value between the 2
     Shake = 1, --camera shake
-    AdsMultiplier = 0.5, --multiply the values by this amount while aiming
+    AdsMultiplier = 0.25, --multiply the values by this amount while aiming
     Seed = 6589132 --give this a random number until you like the current recoil pattern
 }
 
@@ -122,6 +122,7 @@ SWEP.Bullet = {
     Tracer = false, --show tracer
     NumBullets = 1, --the amount of bullets to fire
     PhysicsMultiplier = 1, --damage is multiplied by this amount when pushing objects
+    HeadshotMultiplier = 1,
     Penetration = {
         DamageMultiplier = 0.7, --how much damaged is multipled by when leaving a surface.
         MaxCount = 3, --how many times the bullet can penetrate.
