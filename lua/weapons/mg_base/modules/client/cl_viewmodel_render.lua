@@ -157,7 +157,11 @@ function SWEP:RenderRigs()
 end
 
 function SWEP:RenderModels(ent) 
-    if (ent == self.m_ViewModel || ent == self.m_WorldModel || #ent:GetChildren() <= 0) then
+    if (ent != self.m_ViewModel && !ent.bShell && ent != self:GetOwner():GetHands()) then
+        ent:SetRenderOrigin(self.m_ViewModel:GetPos()) --this fixes lighting origin
+    end
+
+    if (ent == self.m_ViewModel || #ent:GetChildren() <= 0) then
         if (self:GetSight() == nil || ent != self:GetSight().m_Model) then
             ent:DrawModel()
         end

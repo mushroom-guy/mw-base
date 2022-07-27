@@ -292,6 +292,7 @@ local function makeShellForEntity(self, ent, attName)
     shell:SetMoveType(MOVETYPE_NONE)
     shell:SetParent(ent)
     shell:SetModelScale(self.Shell.Scale)
+    shell.bShell = true
     local offset = Vector()
 
     if (self.Shell.Offset != nil) then

@@ -52,8 +52,18 @@ function SWEP:DrawWorldModelTranslucent(flags)
     self.m_ViewModel:FrameAdvance()
     self:AnimationEvents()
 
-    self:RenderModels(self.m_WorldModel)
+    self:RenderWModels(self.m_WorldModel)
     
     --attachments
     self:RenderLaser()
+end
+
+function SWEP:RenderWModels(ent) 
+    if (ent == self.m_WorldModel || #ent:GetChildren() <= 0) then
+        ent:DrawModel()
+    end
+
+    for i, child in pairs(ent:GetChildren()) do
+        self:RenderModels(child)
+    end
 end

@@ -343,7 +343,7 @@ local function decayRecoil(target, lerp, vel, springConstant, wobbleConstant)
 
     local sqrt = math.sqrt(springConstant)
     local dampingForce = -vel * (wobbleConstant)
-    dampingForce.y = dampingForce.y * (sqrt * 2)
+    dampingForce.y = dampingForce.y * (sqrt * 0.65)
     dampingForce.x = dampingForce.x * sqrt
     dampingForce.z = dampingForce.z * sqrt
 

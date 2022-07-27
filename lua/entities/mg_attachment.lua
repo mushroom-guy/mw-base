@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
 ENT.Type = "anim"
+ENT.RenderGroup = RENDERGROUP_OTHER
 
 function ENT:SetupDataTables()
     self:NetworkVar("Int", 0, "Slot")

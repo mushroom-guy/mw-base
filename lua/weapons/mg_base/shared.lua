@@ -33,8 +33,10 @@ SWEP.BounceWeaponIcon = false
 SWEP.m_WeaponDeploySpeed = 12 --fastest it can be because Think freezes when weapon is drawing
 SWEP.ViewModel = "models/weapons/c_arms.mdl"
 SWEP.VModel = "models/weapons/v_357.mdl"
-SWEP.RenderGroup = RENDERGROUP_TRANSLUCENT
-SWEP.RenderMode = RENDERMODE_ENVIROMENTAL
+
+SWEP.RenderGroup = RENDERGROUP_OPAQUE
+SWEP.RenderMode = RENDERMODE_ENVIROMENTAL 
+
 SWEP.ViewModelFlip = false
 SWEP.ViewModelFOV = 64
 SWEP.WorldModel = "models/weapons/w_357.mdl"
@@ -141,12 +143,14 @@ function SWEP:RecreateClientsideModels(bAtts)
     if (!IsValid(self.m_ViewModel)) then     
         self.m_ViewModel = ClientsideModel(self.VModel, self.RenderGroup)    
         self.m_ViewModel:SetRenderMode(self.RenderMode)  
+        self.m_ViewModel:SetOwner(self)  
         --self.m_ViewModel:SetMoveType(MOVETYPE_NONE)   
     end            
                     
     if (!IsValid(self.m_WorldModel)) then      
         self.m_WorldModel = ClientsideModel(self.WorldModel, self.RenderGroup)
         self.m_WorldModel:SetRenderMode(self.RenderMode)  
+        self.m_WorldModel:SetOwner(self)  
         --self.m_WorldModel:SetMoveType(MOVETYPE_NONE)
     end                        
                       
@@ -286,14 +290,6 @@ function SWEP:Initialize()
     self:SetBreathingDelta(1)
     self:SetHasPumped(true)
     self:SetHasRunOutOfBreath(false)
-
-    if (SERVER) then
-        self.m_SyncedClients = {}
-
-        for i, p in pairs(player.GetAll()) do
-            self.m_SyncedClients[p] = true
-        end
-    end 
 
     if CLIENT then
         self:RecreateClientsideModels(false)
@@ -542,39 +538,20 @@ function SWEP:OnRestore()
     self:SetSprayRounds(0)
     self:SetBurstRounds(0)
     self:SetPenetrationCount(0)
-
-    for i,a in pairs(self.Customization) do
-        a.m_Index = 1
-    end
 end
 
 function SWEP:OnRemove()
     if (CLIENT) then
-        if (self.m_ViewModel != NULL) then
-            if (self:GetFlashlightAttachment() != nil) then
-                local flashModel = self:GetFlashlightAttachment().m_Model
-                if (IsValid(flashModel) && flashModel.mw_flashlightProjTexture != nil) then
-                    flashModel.mw_flashlightProjTexture:Remove()
-                end
-            end
-
-            self:RemoveModels(self.m_ViewModel)
-        end 
-
-        if (self.m_WorldModel != NULL) then
-            if (self:GetFlashlightAttachment() != nil) then
-                local flashModel = self:GetFlashlightAttachment().m_TpModel
-                if (IsValid(flashModel) && flashModel.mw_flashlightProjTexture != nil) then
-                    flashModel.mw_flashlightProjTexture:Remove()
-                end
-            end
-
-            self:RemoveModels(self.m_WorldModel)
-        end 
+        for _, att in pairs(self:GetAllAttachmentsInUse()) do
+            att:OnRemove(self)
+        end
 
         for i, particle in pairs(self.Particles) do
             particle:StopEmissionAndDestroyImmediately()
         end
+
+        self:RemoveModels(self.m_ViewModel)
+        self:RemoveModels(self.m_WorldModel)
     end
 end
 

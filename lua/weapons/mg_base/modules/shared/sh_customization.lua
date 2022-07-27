@@ -128,6 +128,7 @@ function SWEP:CreateAttachmentModel(attachment)
         attachment.m_Model = ClientsideModel(attachment.Model, self.RenderGroup)
         attachment.m_Model:SetRenderMode(self.RenderMode)
         attachment.m_Model:SetMoveType(MOVETYPE_NONE)
+        attachment.m_Model:SetOwner(self.m_ViewModel)
 
         if (attachment.VElement == nil) then
             attachment.m_Model:AddEffects(EF_BONEMERGE)
@@ -179,6 +180,7 @@ function SWEP:CreateAttachmentModel(attachment)
         attachment.m_TpModel = ClientsideModel(attachment.Model, self.RenderGroup)
         attachment.m_TpModel:SetRenderMode(self.RenderMode)
         attachment.m_TpModel:SetMoveType(MOVETYPE_NONE)
+        attachment.m_TpModel:SetOwner(self.m_WorldModel)
 
         if (attachment.VElement == nil) then
             attachment.m_TpModel:AddEffects(EF_BONEMERGE)
