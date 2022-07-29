@@ -157,7 +157,7 @@ function SWEP:RenderRigs()
 end
 
 function SWEP:RenderModels(ent) 
-    if (ent != self.m_ViewModel && !ent.bShell && ent != self:GetOwner():GetHands()) then
+    if (ent != self.m_ViewModel && !ent.bShell && ent != self:GetOwner():GetHands() && ent:IsEffectActive(EF_BONEMERGE)) then
         ent:SetRenderOrigin(self.m_ViewModel:GetPos()) --this fixes lighting origin
     end
 
@@ -169,14 +169,6 @@ function SWEP:RenderModels(ent)
 
     for i, child in pairs(ent:GetChildren()) do
         self:RenderModels(child)
-    end
-end
-
-function SWEP:RefreshCandidates(ent)
-    ent._bMWDraw = nil
-
-    for i, child in pairs(ent:GetChildren()) do
-        self:RefreshCandidates(child)
     end
 end
 
